@@ -1,9 +1,11 @@
 "use client";
-import { quizCreationSchema } from "@/schemas/forms/quiz";
-import React from "react";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -13,21 +15,27 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { quizCreationSchema } from "@/schemas/forms/quiz";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
+import { BookOpen, CopyCheck } from "lucide-react";
+import { useRouter } from "next/navigation";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { BookOpen, CopyCheck } from "lucide-react";
 import { Separator } from "../ui/separator";
-import axios, { AxiosError } from "axios";
-import { useMutation } from "@tanstack/react-query";
 import { useToast } from "../ui/use-toast";
-import { useRouter } from "next/navigation";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+
 import LoadingQuestions from "../LoadingQuestions";
 
 type Props = {
@@ -153,14 +161,16 @@ const QuizCreation = ({ topic: topicParam, level: levelParam }: Props) => {
                   <FormItem>
                     <FormLabel>Difficulty Level</FormLabel>
                     <FormControl>
-                      <select
-                        className="w-full p-2 border rounded-md border-gray-300 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
-                        {...field}
-                      >
-                        <option value="beginner">Beginner</option>
-                        <option value="intermediate">Intermediate</option>
-                        <option value="expert">Expert</option>
-                      </select>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select a difficulty level" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="beginner">Beginner</SelectItem>
+                          <SelectItem value="intermediate">Intermediate</SelectItem>
+                          <SelectItem value="expert">Expert</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormDescription>
                       Select the difficulty level of the questions.
