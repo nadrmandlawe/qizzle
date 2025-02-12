@@ -1,11 +1,11 @@
 import { prisma } from "@/lib/db";
 import { getAuthSession } from "@/lib/nextauth";
 import { quizCreationSchema } from "@/schemas/forms/quiz";
+import axios from "axios";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import axios from "axios";
 
-export async function POST(req: Request, res: Response) {
+export async function POST(req: Request) {
   try {
     // Verify database connection
     try {
@@ -153,7 +153,7 @@ export async function POST(req: Request, res: Response) {
   }
 }
 
-export async function GET(req: Request, res: Response) {
+export async function GET(req: Request) {
   try {
     const session = await getAuthSession();
     if (!session?.user) {

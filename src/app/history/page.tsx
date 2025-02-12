@@ -1,5 +1,5 @@
-import HistoryComponent from "@/components/HistoryComponent";
-import TopicFilterWrapper from "@/components/statistics/TopicFilterWrapper";
+import HistoryComponent from "@/components/history-component";
+import TopicFilterWrapper from "@/components/statistics/topic-filter-wrapper";
 import { buttonVariants } from "@/components/ui/button";
 import { prisma } from "@/lib/db";
 import { getAuthSession } from "@/lib/nextauth";
@@ -7,13 +7,17 @@ import { LucideLayoutDashboard } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-type Props = {
-  searchParams: {
-    topic?: string;
-  };
+type SearchParams = {
+  topic?: string;
+  [key: string]: string | undefined;
 };
 
-const History = async ({ searchParams }: Props) => {
+type Props = {
+  searchParams: Promise<SearchParams>;
+};
+
+const History = async (props: Props) => {
+  const searchParams = await props.searchParams;
   const session = await getAuthSession();
   if (!session?.user) {
     return redirect("/");
@@ -27,7 +31,7 @@ const History = async ({ searchParams }: Props) => {
     select: {
       topic: true,
     },
-    distinct: ['topic'],
+    distinct: ["topic"],
   });
 
   const topics = userGames

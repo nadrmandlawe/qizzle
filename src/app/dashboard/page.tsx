@@ -1,17 +1,17 @@
-import HotTopicsCard from "@/components/dashboard/HotTopicsCard";
-import QuizMeCard from "@/components/dashboard/QuizMeCard";
-import RecentActivityCard from "@/components/dashboard/RecentActivityCard";
+import HotTopicsCard from "@/components/dashboard/hot-topics-card";
+import QuizMeCard from "@/components/dashboard/quiz-me-card";
+import RecentActivityCard from "@/components/dashboard/recent-activity-card";
 import { getAuthSession } from "@/lib/nextauth";
 import { redirect } from "next/navigation";
-
-type Props = {};
 
 export const metadata = {
   title: "Dashboard | Quizmify",
   description: "Quiz yourself on anything!"
 };
 
-const Dasboard = async (props: Props) => {
+export const dynamic = "force-dynamic";
+
+const Dashboard = async () => {
   const session = await getAuthSession();
   if (!session?.user) {
     redirect("/");
@@ -23,17 +23,14 @@ const Dasboard = async (props: Props) => {
         <h2 className="mr-2 text-3xl font-bold tracking-tight">Dashboard</h2>
       </div>
 
-
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-2">
         <div className="flex flex-col w-full gap-2 col-span-2">
-        <QuizMeCard />
-        <HotTopicsCard />
-
+          <QuizMeCard />
+          <HotTopicsCard />
         </div>
 
         <div className="col-span-2">
-        <RecentActivityCard />
-        
+          <RecentActivityCard />
         </div>
       </div>
       {/* <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 lg:gap-2 pb-12">
@@ -51,4 +48,4 @@ const Dasboard = async (props: Props) => {
   );
 };
 
-export default Dasboard;
+export default Dashboard;

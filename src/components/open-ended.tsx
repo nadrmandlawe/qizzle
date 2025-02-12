@@ -11,8 +11,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button, buttonVariants } from "./ui/button";
-import OpenEndedPercentage from "./OpenEndedPercentage";
-import BlankAnswerInput from "./BlankAnswerInput";
+import OpenEndedPercentage from "./open-ended-percentage";
+import BlankAnswerInput from "./blank-answer-input";
 import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
 import { checkAnswerSchema, endGameSchema } from "@/schemas/questions";

@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/db";
 import { getAuthSession } from "@/lib/nextauth";
 import { redirect } from "next/navigation";
-import HistoryComponent from "../HistoryComponent";
+import HistoryComponent from "../history-component";
 import { ScrollArea } from "../ui/scroll-area";
 
 type Props = {};

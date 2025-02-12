@@ -4,10 +4,10 @@ import { getAuthSession } from "@/lib/nextauth";
 import { LucideLayoutDashboard } from "lucide-react";
 import Link from "next/link";
 
-import AccuracyCard from "@/components/statistics/AccuracyCard";
-import QuestionsList from "@/components/statistics/QuestionsList";
-import ResultsCard from "@/components/statistics/ResultsCard";
-import TimeTakenCard from "@/components/statistics/TimeTakenCard";
+import AccuracyCard from "@/components/statistics/accuracy-card";
+import QuestionsList from "@/components/statistics/questions-list";
+import ResultsCard from "@/components/statistics/results-card";
+import TimeTakenCard from "@/components/statistics/time-taken-card";
 import { Game, Question } from "@prisma/client";
 import { redirect } from "next/navigation";
 

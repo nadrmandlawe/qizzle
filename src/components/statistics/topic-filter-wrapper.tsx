@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import TopicFilter from "./TopicFilter";
+import TopicFilter from "./topic-filter";
 
 type Props = {
   topics: string[];

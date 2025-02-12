@@ -1,13 +1,15 @@
-import SignInButton from "@/components/SignInButton";
+import SignInButton from "@/components/sign-in-button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
 } from "@/components/ui/card";
 import { getAuthSession } from "@/lib/nextauth";
 import { redirect } from "next/navigation";
+
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const session = await getAuthSession();
@@ -20,8 +22,8 @@ export default async function Home() {
         <CardHeader>
           <CardTitle>Welcome to Quizmify 🔥!</CardTitle>
           <CardDescription>
-            Quizmify is a platform for creating quizzes using AI!. Get started
-            by loggin in below!
+            Quizmify is a platform for creating quizzes using AI! Get started by
+            signing in below!
           </CardDescription>
         </CardHeader>
         <CardContent>

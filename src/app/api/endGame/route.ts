@@ -2,7 +2,7 @@ import { prisma } from "@/lib/db";
 import { endGameSchema } from "@/schemas/questions";
 import { NextResponse } from "next/server";
 
-export async function POST(req: Request, res: Response) {
+export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { gameId } = endGameSchema.parse(body);
@@ -34,9 +34,10 @@ export async function POST(req: Request, res: Response) {
       message: "Game ended",
     });
   } catch (error) {
+    console.error("Error ending game:", error);
     return NextResponse.json(
       {
-        message: "Something went wrong",
+        message: error instanceof Error ? error.message : "Something went wrong",
       },
       { status: 500 }
     );

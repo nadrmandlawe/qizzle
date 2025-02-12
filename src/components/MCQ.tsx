@@ -13,7 +13,7 @@ import Link from "next/link";
 import { BarChart, ChevronRight, Loader2, Timer } from "lucide-react";
 import { checkAnswerSchema, endGameSchema } from "@/schemas/questions";
 import { cn, formatTimeDelta } from "@/lib/utils";
-import MCQCounter from "./MCQCounter";
+import MCQCounter from "./mcq-counter";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { z } from "zod";

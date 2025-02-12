@@ -1,19 +1,19 @@
-import React from "react";
-
+import QuizCreation from "@/components/forms/quiz-creation";
 import { getAuthSession } from "@/lib/nextauth";
 import { redirect } from "next/navigation";
-import QuizCreation from "@/components/forms/QuizCreation";
 
 export const metadata = {
   title: "Quiz | Quizmify",
   description: "Quiz yourself on anything!"
 };
 
+type SearchParams = {
+  topic?: string;
+  level?: "beginner" | "intermediate" | "expert";
+};
+
 interface Props {
-  searchParams: Promise<{
-    topic?: string;
-    level?: "beginner" | "intermediate" | "expert";
-  }>;
+  searchParams: Promise<SearchParams>;
 }
 
 const Quiz = async (props: Props) => {

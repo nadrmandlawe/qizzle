@@ -1,8 +1,7 @@
-import OpenEnded from "@/components/OpenEnded";
+import OpenEnded from "@/components/open-ended";
 import { prisma } from "@/lib/db";
 import { getAuthSession } from "@/lib/nextauth";
 import { redirect } from "next/navigation";
-import React from "react";
 
 type Props = {
   params: Promise<{
