@@ -1,12 +1,13 @@
 "use client";
 
 
-import { PersonStanding } from "lucide-react";
+import { IconBrandGoogleFilled, IconLogout } from "@tabler/icons-react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
+
 
 export default function AuthButton({ minimal = true }: { minimal?: boolean }) {
   const { data, status } = useSession();
@@ -14,7 +15,7 @@ export default function AuthButton({ minimal = true }: { minimal?: boolean }) {
 
 
   if (status === "loading") {
-    return <div aria-label="Loading authentication status..." className="size-10 animate-pulse rounded-full bg-gray-200 dark:bg-gray-800" />;
+    return <div aria-label="Loading authentication status..." className="size-8 animate-pulse rounded-full bg-gray-200 dark:bg-gray-800" />;
   }
 
   if (status === "authenticated") {
@@ -32,14 +33,14 @@ export default function AuthButton({ minimal = true }: { minimal?: boolean }) {
     }
 
     return (
-      <DropdownMenu >
+      <DropdownMenu>
         <DropdownMenuTrigger>
         <Avatar>
   <AvatarImage  src={data.user.image!}/>
   <AvatarFallback>CN</AvatarFallback>
 </Avatar>
         </DropdownMenuTrigger>
-    <DropdownMenuContent aria-label="Profile Actions">
+    <DropdownMenuContent aria-label="Profile Actions" className="mr-4">
           <DropdownMenuItem key="profile" className="h-14 gap-2">
           <div className="flex items-center justify-start gap-2 p-2">
           <div className="flex flex-col space-y-1 leading-none">
@@ -54,6 +55,7 @@ export default function AuthButton({ minimal = true }: { minimal?: boolean }) {
           </DropdownMenuItem>
           <DropdownMenuSeparator />
         <DropdownMenuItem
+        className="cursor-pointer"
           onSelect={(event) => {
             event.preventDefault();
             router.push("/dashboard");
@@ -63,7 +65,8 @@ export default function AuthButton({ minimal = true }: { minimal?: boolean }) {
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
-          <DropdownMenuItem key="sign-out" className="cursor-pointer text-red-500" onSelect={signOutClick}>
+          <DropdownMenuItem key="sign-out" className="cursor-pointer text-red-500 gap-2" onSelect={signOutClick}>
+            <IconLogout size={16}/>
             Sign Out
           </DropdownMenuItem>
           </DropdownMenuContent>
@@ -76,13 +79,13 @@ export default function AuthButton({ minimal = true }: { minimal?: boolean }) {
     <Button
       onClick={() =>
         signIn("google", {
-          callbackUrl: "/profile",
+          callbackUrl: "/dashboard",
         })
       }
-      color="danger"
       variant="ghost"
+      className="gap-2"
     >
-      <PersonStanding/>
+      <IconBrandGoogleFilled size={18}/>
       Sign In
     </Button>
   );

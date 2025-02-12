@@ -76,12 +76,13 @@ const Navbar = () => {
 
 
   </NavigationMenuList >
-  <NavigationMenuList className="flex items-center justify-between h-full gap-2 px-8 mx-auto ">
+
+  <NavigationMenuList className="flex items-center justify-center h-full px-8 mx-auto gap-2">
     <NavigationMenuItem>
     <ThemeToggle />
     </NavigationMenuItem>
 
-    <NavigationMenuItem>
+    <NavigationMenuItem className="flex items-center">
     <AuthButton minimal={false}/>
     </NavigationMenuItem>
     </NavigationMenuList>
