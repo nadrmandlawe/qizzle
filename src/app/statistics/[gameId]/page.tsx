@@ -4,12 +4,11 @@ import { getAuthSession } from "@/lib/nextauth";
 import { LucideLayoutDashboard } from "lucide-react";
 import Link from "next/link";
 
-import { redirect } from "next/navigation";
-import React from "react";
-import ResultsCard from "@/components/statistics/ResultsCard";
 import AccuracyCard from "@/components/statistics/AccuracyCard";
-import TimeTakenCard from "@/components/statistics/TimeTakenCard";
 import QuestionsList from "@/components/statistics/QuestionsList";
+import ResultsCard from "@/components/statistics/ResultsCard";
+import TimeTakenCard from "@/components/statistics/TimeTakenCard";
+import { redirect } from "next/navigation";
 
 type Props = {
   params: Promise<{
@@ -56,7 +55,7 @@ const Statistics = async (props: Props) => {
 
   return (
     <>
-      <div className="p-8 mx-auto max-w-7xl">
+      <div className="p-8 mx-auto max-w-7xl mt-14">
         <div className="flex items-center justify-between space-y-2">
           <h2 className="text-3xl font-bold tracking-tight">Summary</h2>
           <div className="flex items-center space-x-2">

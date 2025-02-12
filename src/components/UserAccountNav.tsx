@@ -1,7 +1,5 @@
 "use client";
 
-import type { User } from "next-auth";
-import React from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,10 +7,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import UserAvatar from "./UserAvatar";
-import { signOut } from "next-auth/react";
 import { LogOut } from "lucide-react";
+import type { User } from "next-auth";
+import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import UserAvatar from "./UserAvatar";
 
 type Props = {
   user: Pick<User, "name" | "image" | "email">;
@@ -21,25 +20,31 @@ type Props = {
 const UserAccountNav = ({ user }: Props) => {
   const router = useRouter();
 
+  const handleSignOut = async (event: Event) => {
+    event.preventDefault();
+    await signOut({ 
+      callbackUrl: '/',
+      redirect: true 
+    });
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <div>
-          <UserAvatar
-            className="w-10 h-10"
-            user={{
-              name: user.name || null,
-              image: user.image || null,
-            }}
-          />
-        </div>
+        <UserAvatar
+          className="w-10 h-10"
+          user={{
+            name: user.name || null,
+            image: user.image || null,
+          }}
+        />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <div className="flex items-center justify-start gap-2 p-2">
           <div className="flex flex-col space-y-1 leading-none">
-            {user.name && <p className="font-medium "> Hi, {user.name}</p>}
+            {user.name && <p className="font-medium">Hi, {user.name}</p>}
             {user.email && (
-              <p className="w-[200px] truncate text-sm ">
+              <p className="w-[200px] truncate text-sm text-muted-foreground">
                 {user.email}
               </p>
             )}
@@ -49,7 +54,7 @@ const UserAccountNav = ({ user }: Props) => {
         <DropdownMenuItem
           onSelect={(event) => {
             event.preventDefault();
-            router.push("/");
+            router.push("/dashboard");
           }}
         >
           Dashboard
@@ -58,14 +63,11 @@ const UserAccountNav = ({ user }: Props) => {
         <DropdownMenuSeparator />
 
         <DropdownMenuItem
-          onSelect={(event) => {
-            event.preventDefault();
-            signOut().catch(console.error);
-          }}
+          onSelect={handleSignOut}
           className="text-red-600 cursor-pointer"
         >
           Sign out
-          <LogOut className="w-4 h-4 ml-2 " />
+          <LogOut className="w-4 h-4 ml-2" />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -1,10 +1,11 @@
+import Navbar from "@/components/Navbar";
+import Providers from "@/components/Providers";
+import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
-import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Providers from "@/components/Providers";
-import Navbar from "@/components/Navbar";
-import { Toaster } from "@/components/ui/toaster";
+import { Suspense } from "react";
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,10 +21,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn(inter.className, "antialiased min-h-screen pt-16")}>
+      <body className={cn(inter.className, "antialiased h-screen w-screen")}>
         <Providers>
           <Navbar />
-          {children}
+          <main className="flex-grow overflow-auto">
+            <Suspense>{children}</Suspense>
+          </main>
           <Toaster/>
         </Providers>
       </body>

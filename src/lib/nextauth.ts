@@ -37,8 +37,13 @@ declare module "next-auth/jwt" {
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   secret: process.env.NEXTAUTH_SECRET,
+  pages: {
+    signIn: "/",
+    error: "/error",
+  },
   callbacks: {
     jwt: async ({ token, user }) => {
       if (user) {
@@ -64,12 +69,49 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
+    redirect({ url, baseUrl }) {
+      // Handle callback after sign in
+      if (url.includes('/api/auth/callback/google')) {
+        return `${baseUrl}/dashboard`;
+      }
+      // Keep user on the same URL if it's within our domain
+      if (url.startsWith(baseUrl)) {
+        return url;
+      }
+      // Handle relative URLs
+      if (url.startsWith('/')) {
+        return `${baseUrl}${url}`;
+      }
+      // Default fallback
+      return baseUrl;
+    }
+  },
+  events: {
+    signIn: async ({ user, account, profile }) => {
+      if (account?.provider === 'google') {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { 
+            name: profile?.name,
+            image: profile?.image,
+          },
+        }).catch(console.error);
+      }
+    },
   },
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+          scope: "openid email profile",
+        }
+      },
     }),
   ],
 };
