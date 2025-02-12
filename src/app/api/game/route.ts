@@ -76,7 +76,7 @@ export async function POST(req: Request) {
     });
 
     const { data } = await axios.post(
-      `${process.env.API_URL as string}/api/questions`,
+      `${process.env.NEXTAUTH_URL as string}/api/questions`,
       {
         amount,
         topic,

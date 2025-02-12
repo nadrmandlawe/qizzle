@@ -1,19 +1,62 @@
-# Quizmify
+# 🎯 Quizmify - AI-Powered Quiz Platform
 
-A Next.js application for creating and taking quizzes powered by AI.
+Quizmify is an intelligent quiz generation platform that leverages the power of AI to create personalized learning experiences. Challenge yourself with dynamically generated questions across any topic, track your progress, and improve your knowledge through interactive quizzes.
 
-## Prerequisites
+## ✨ Features
 
-- Node.js 16+ and npm
-- Docker Desktop
-- Google OAuth credentials
-- OpenAI API key or Google Gemini API key
+### Core Features
+- 🤖 **AI-Powered Quiz Generation** - Utilizes Google's Gemini AI to create intelligent and contextually relevant questions
+- 🎯 **Multiple Quiz Types** 
+  - Multiple Choice Questions (MCQ)
+  - Open-ended Questions with AI-powered answer evaluation
+- 📊 **Comprehensive Statistics**
+  - Detailed performance analytics
+  - Topic-wise progress tracking
+  - Historical quiz data visualization
 
-## Setup Instructions
+### User Experience
+- 🌓 **Dark/Light Mode** - Beautiful UI that adapts to your preference
+- 📱 **Responsive Design** - Seamless experience across all devices
+- 🎨 **Modern Interface** - Built with Shadcn UI components
+- ⚡ **Real-time Feedback** - Instant scoring and performance insights
+
+### Smart Features
+- 🎚️ **Difficulty Levels** - Choose between Beginner, Intermediate, and Expert
+- 🏷️ **Topic Filtering** - Organize and filter quizzes by topics
+- 📈 **Progress Tracking** - Monitor your improvement over time
+- 🔥 **Hot Topics** - Discover popular quiz categories
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **Next.js 15** - Latest features including App Router and React Server Components
+- **TypeScript** - Type-safe code development
+- **Tailwind CSS** - Utility-first CSS framework
+- **Shadcn UI** - High-quality UI components
+- **React Query** - Efficient server state management
+- **Next-Auth** - Secure authentication
+
+### Backend
+- **Prisma** - Type-safe database ORM
+- **MySQL** - Reliable data storage
+- **Docker** - Containerized development environment
+- **Google Gemini API** - Advanced AI capabilities
+
+### Authentication & Security
+- **NextAuth.js** - OAuth integration with Google
+- **Prisma Adapter** - Seamless auth-database integration
+- **JWT Tokens** - Secure session management
+
+### Development Tools
+- **ESLint** - Code quality maintenance
+- **Prettier** - Code formatting
+- **Docker Compose** - Development environment orchestration
+
+## 🚀 Getting Started
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/nadrmandlawe/quizmify.git
    cd quizmify
    ```
 
@@ -23,7 +66,7 @@ A Next.js application for creating and taking quizzes powered by AI.
    ```
 
 3. **Set up environment variables**
-   Create a `.env` file in the root directory with the following variables:
+   Create a `.env` file with:
    ```env
    # Database
    DATABASE_URL="mysql://quizmify:quizmify@localhost:3306/quizmify"
@@ -34,101 +77,39 @@ A Next.js application for creating and taking quizzes powered by AI.
    GOOGLE_CLIENT_ID='your-google-client-id'
    GOOGLE_CLIENT_SECRET='your-google-client-secret'
 
-   # AI APIs (use either OpenAI or Gemini)
-   OPENAI_API_KEY='your-openai-api-key'
+   # AI API (use either Gemini or OpenAI)
    GEMINI_API_KEY='your-gemini-api-key'
-
-   # App URL
-   API_URL='http://localhost:3000'
+   OPENAI_API_KEY='your-openai-api-key'
    ```
 
-4. **Start the MySQL Database**
+4. **Start the database**
    ```bash
-   # Start MySQL and Adminer containers
    docker compose up -d
    ```
 
-   You can access Adminer at http://localhost:8080 with these credentials:
-   - System: MySQL
-   - Server: mysql
-   - Username: quizmify
-   - Password: quizmify
-   - Database: quizmify
-
-5. **Initialize the database**
+5. **Initialize Prisma**
    ```bash
-   # Push the database schema
-   npx prisma db push
-   
-   # Generate Prisma Client
    npx prisma generate
+   npx prisma db push
    ```
 
-6. **Start the development server**
+6. **Run the development server**
    ```bash
    npm run dev
    ```
 
-   The application will be available at http://localhost:3000
+## 📱 Screenshots
 
-## Features
+[Add your application screenshots here]
 
-- Google Authentication
-- AI-powered quiz generation
-- Multiple choice and open-ended questions
-- Topic-based quizzes
-- Real-time scoring
-- User dashboard
-- Dark/Light mode
+## 🤝 Contributing
 
-## Tech Stack
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-- Next.js 13+ with App Router
-- TypeScript
-- Prisma ORM
-- MySQL
-- NextAuth.js
-- Tailwind CSS
-- OpenAI/Google Gemini API
-- Docker
 
-## Useful Commands
+## 🙏 Acknowledgments
 
-```bash
-# Start the application
-npm run dev
+- Thanks to the amazing open-source community
+- Powered by Google's Gemini AI
+- Built with Next.js and Vercel
 
-# Build the application
-npm run build
-
-# Start production server
-npm start
-
-# Database Management
-npx prisma studio    # Open Prisma Studio
-npx prisma db push   # Push schema changes
-npx prisma generate  # Generate Prisma Client
-
-# Docker Commands
-docker compose up -d          # Start containers
-docker compose down          # Stop containers
-docker compose logs         # View container logs
-```
-
-## Environment Setup Help
-
-1. **Google OAuth Setup:**
-   - Go to Google Cloud Console
-   - Create a new project
-   - Enable OAuth 2.0
-   - Create credentials (OAuth client ID)
-   - Add authorized redirect URI: http://localhost:3000/api/auth/callback/google
-
-2. **Database Connection:**
-   - Make sure Docker is running
-   - The MySQL container should be running on port 3306
-   - Use Adminer (http://localhost:8080) to manage the database
-
-3. **AI API Setup:**
-   - For OpenAI: Get API key from OpenAI dashboard
-   - For Gemini: Get API key from Google AI Studio
