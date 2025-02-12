@@ -154,7 +154,7 @@ const QuizCreation = ({ topic: topicParam, level: levelParam }: Props) => {
                     <FormLabel>Difficulty Level</FormLabel>
                     <FormControl>
                       <select
-                        className="w-full p-2 border rounded-md border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full p-2 border rounded-md border-gray-300 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
                         {...field}
                       >
                         <option value="beginner">Beginner</option>
