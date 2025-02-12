@@ -1,22 +1,22 @@
 "use client";
-import { Game, Question } from "@prisma/client";
-import React from "react";
 import {
   Card,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button, buttonVariants } from "./ui/button";
-import { differenceInSeconds } from "date-fns";
-import Link from "next/link";
-import { BarChart, ChevronRight, Loader2, Timer } from "lucide-react";
-import { checkAnswerSchema, endGameSchema } from "@/schemas/questions";
 import { cn, formatTimeDelta } from "@/lib/utils";
-import MCQCounter from "./mcq-counter";
+import { checkAnswerSchema, endGameSchema } from "@/schemas/questions";
+import { Game, Question } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import { differenceInSeconds } from "date-fns";
+import { BarChart, ChevronRight, Loader2, Timer } from "lucide-react";
+import Link from "next/link";
+import React from "react";
 import { z } from "zod";
+import MCQCounter from "./mcq-counter";
+import { Button, buttonVariants } from "./ui/button";
 import { useToast } from "./ui/use-toast";
 
 type Props = {

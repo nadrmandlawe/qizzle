@@ -1,15 +1,14 @@
 "use client";
 
-import { useSession } from "next-auth/react";
-import React from "react";
-import AuthButton from "./auth-button";
 import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList
+    NavigationMenu,
+    NavigationMenuItem,
+    NavigationMenuLink,
+    NavigationMenuList
 } from "@/components/ui/navigation-menu";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
+import AuthButton from "./auth-button";
 import { ThemeToggle } from "./theme-toggle";
 
 const Navbar = () => {
