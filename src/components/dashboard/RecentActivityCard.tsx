@@ -1,16 +1,8 @@
-import React from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import Link from "next/link";
+import { prisma } from "@/lib/db";
 import { getAuthSession } from "@/lib/nextauth";
 import { redirect } from "next/navigation";
 import HistoryComponent from "../HistoryComponent";
-import { prisma } from "@/lib/db";
+import { ScrollArea } from "../ui/scroll-area";
 
 type Props = {};
 
@@ -25,19 +17,31 @@ const RecentActivityCard = async (props: Props) => {
     },
   });
   return (
-    <Card className="col-span-4 lg:col-span-3">
-      <CardHeader>
-        <CardTitle className="text-2xl font-bold">
-          <Link href="/history">Recent Activity</Link>
-        </CardTitle>
-        <CardDescription>
-          You have played a total of {games_count} quizzes.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="max-h-[580px] overflow-y-auto">
-        <HistoryComponent limit={10} userId={session.user.id} />
-      </CardContent>
-    </Card>
+    // <Card className="col-span-4 lg:col-span-3">
+    //   <CardHeader>
+    //     <CardTitle className="text-2xl font-bold">
+    //       <Link href="/history">Recent Activity</Link>
+    //     </CardTitle>
+    //     <CardDescription>
+    //       You have played a total of {games_count} quizzes.
+    //     </CardDescription>
+    //   </CardHeader>
+    //   <CardContent className=" overflow-y-auto">
+    //     <HistoryComponent limit={10} userId={session.user.id} />
+    //   </CardContent>
+    // </Card>
+    <ScrollArea className="rounded-md border h-[700px]">
+           <div className="sticky top-0 bg-background p-4 w-full rounded-md">
+      <h1 className="text-2xl font-bold">Recent Activity</h1>
+      <p className="text-sm text-muted-foreground">
+      You have played a total of {games_count} quizzes.
+        </p>
+      </div>
+    <div className="p-4 ">
+ 
+      <HistoryComponent limit={10} userId={session.user.id} />
+    </div>
+  </ScrollArea>
   );
 };
 

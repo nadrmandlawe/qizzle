@@ -75,6 +75,16 @@ export default function AuthButton({ minimal = true }: { minimal?: boolean }) {
           >
             Dashboard
           </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onSelect={(event) => {
+              event.preventDefault();
+              router.push("/history");
+            }}
+          >
+            History
+          </DropdownMenuItem>
 
           <DropdownMenuSeparator />
           <DropdownMenuItem key="sign-out" className="cursor-pointer text-red-500 gap-2" onSelect={signOutClick}>

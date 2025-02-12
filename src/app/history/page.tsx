@@ -1,36 +1,66 @@
 import HistoryComponent from "@/components/HistoryComponent";
-import { getAuthSession } from "@/lib/nextauth";
-import { redirect } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import React from "react";
-import Link from "next/link";
+import TopicFilterWrapper from "@/components/statistics/TopicFilterWrapper";
 import { buttonVariants } from "@/components/ui/button";
+import { prisma } from "@/lib/db";
+import { getAuthSession } from "@/lib/nextauth";
 import { LucideLayoutDashboard } from "lucide-react";
+import Link from "next/link";
+import { redirect } from "next/navigation";
 
-type Props = {};
+type Props = {
+  searchParams: {
+    topic?: string;
+  };
+};
 
-const History = async (props: Props) => {
+const History = async ({ searchParams }: Props) => {
   const session = await getAuthSession();
   if (!session?.user) {
     return redirect("/");
   }
+
+  // Get all user's topics
+  const userGames = await prisma.game.findMany({
+    where: {
+      userId: session.user.id,
+    },
+    select: {
+      topic: true,
+    },
+    distinct: ['topic'],
+  });
+
+  const topics = userGames
+    .map((game: { topic: string }) => game.topic)
+    .sort((a: string, b: string) => a.localeCompare(b)); // Sort alphabetically
+  const selectedTopic = searchParams.topic || "all";
+
   return (
-    <div className="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 w-[400px]">
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-2xl font-bold">History</CardTitle>
-            <Link className={buttonVariants()} href="/dashboard">
-              <LucideLayoutDashboard className="mr-2" />
-              Back to Dashboard
-            </Link>
-          </div>
-        </CardHeader>
-        <CardContent className="max-h-[60vh] overflow-y-auto">
-          <HistoryComponent limit={100} userId={session.user.id} />
-        </CardContent>
-      </Card>
-    </div>
+    <main className="p-8 mx-auto max-w-7xl mt-14">
+      <div className="flex items-center justify-between mb-8">
+        <h2 className="text-3xl font-bold tracking-tight">
+          {selectedTopic === "all" ? "History" : `History for ${selectedTopic}`}
+        </h2>
+        <div className="flex items-center space-x-4">
+          <TopicFilterWrapper 
+            topics={topics}
+            selectedTopic={selectedTopic}
+          />
+          <Link className={buttonVariants()} href="/dashboard">
+            <LucideLayoutDashboard className="mr-2" />
+            Back to Dashboard
+          </Link>
+        </div>
+      </div>
+
+      <div className="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4">
+        <HistoryComponent 
+          limit={100} 
+          userId={session.user.id} 
+          topic={selectedTopic}
+        />
+      </div>
+    </main>
   );
 };
 

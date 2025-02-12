@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Card,
   CardContent,
@@ -6,8 +5,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import WordCloud from "../WordCloud";
 import { prisma } from "@/lib/db";
+import WordCloud from "../WordCloud";
 
 type Props = {};
 
@@ -20,7 +19,7 @@ const HotTopicsCard = async (props: Props) => {
     };
   });
   return (
-    <Card className="col-span-4">
+    <Card className="col-span-4 h-[582px]">
       <CardHeader>
         <CardTitle className="text-2xl font-bold">Hot Topics</CardTitle>
         <CardDescription>

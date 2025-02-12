@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 
 import {
   Table,
@@ -31,44 +30,42 @@ const QuestionsList = ({ questions }: Props) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        <>
-          {questions.map(
-            (
-              { answer, question, userAnswer, percentageCorrect, isCorrect },
-              index
-            ) => {
-              return (
-                <TableRow key={index}>
-                  <TableCell className="font-medium">{index + 1}</TableCell>
-                  <TableCell>
-                    {question} <br />
-                    <br />
-                    <span className="font-semibold">{answer}</span>
+        {questions.map(
+          (
+            { answer, question, userAnswer, percentageCorrect, isCorrect, questionType },
+            index
+          ) => {
+            return (
+              <TableRow key={index}>
+                <TableCell className="font-medium">{index + 1}</TableCell>
+                <TableCell>
+                  {question} <br />
+                  <br />
+                  <span className="font-semibold">{answer}</span>
+                </TableCell>
+                {questions[0].questionType === "open_ended" ? (
+                  <TableCell className={`font-semibold`}>
+                    {userAnswer}
                   </TableCell>
-                  {questions[0].questionType === "open_ended" ? (
-                    <TableCell className={`font-semibold`}>
-                      {userAnswer}
-                    </TableCell>
-                  ) : (
-                    <TableCell
-                      className={`${
-                        isCorrect ? "text-green-600" : "text-red-600"
-                      } font-semibold`}
-                    >
-                      {userAnswer}
-                    </TableCell>
-                  )}
+                ) : (
+                  <TableCell
+                    className={`${
+                      isCorrect ? "text-green-600" : "text-red-600"
+                    } font-semibold`}
+                  >
+                    {userAnswer}
+                  </TableCell>
+                )}
 
-                  {percentageCorrect && (
-                    <TableCell className="text-right">
-                      {percentageCorrect}
-                    </TableCell>
-                  )}
-                </TableRow>
-              );
-            }
-          )}
-        </>
+                {questionType === "open_ended" && (
+                  <TableCell className="text-right">
+                    {Number(percentageCorrect ?? 0).toFixed(1)}%
+                  </TableCell>
+                )}
+              </TableRow>
+            );
+          }
+        )}
       </TableBody>
     </Table>
   );

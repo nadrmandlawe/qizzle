@@ -8,6 +8,7 @@ import AccuracyCard from "@/components/statistics/AccuracyCard";
 import QuestionsList from "@/components/statistics/QuestionsList";
 import ResultsCard from "@/components/statistics/ResultsCard";
 import TimeTakenCard from "@/components/statistics/TimeTakenCard";
+import { Game, Question } from "@prisma/client";
 import { redirect } from "next/navigation";
 
 type Props = {
@@ -16,21 +17,24 @@ type Props = {
   }>;
 };
 
-const Statistics = async (props: Props) => {
-  const params = await props.params;
+type GameWithQuestions = Game & {
+  questions: Question[];
+};
 
-  const {
-    gameId
-  } = params;
+const Statistics = async ({ params }: Props) => {
+  const resolvedParams = await params;
+  const { gameId } = resolvedParams;
 
   const session = await getAuthSession();
   if (!session?.user) {
     return redirect("/");
   }
+
   const game = await prisma.game.findUnique({
     where: { id: gameId },
     include: { questions: true },
-  });
+  }) as GameWithQuestions | null;
+
   if (!game) {
     return redirect("/");
   }
@@ -38,19 +42,20 @@ const Statistics = async (props: Props) => {
   let accuracy: number = 0;
 
   if (game.gameType === "mcq") {
-    let totalCorrect = game.questions.reduce((acc, question) => {
+    const totalCorrect = game.questions.reduce((acc: number, question: Question) => {
       if (question.isCorrect) {
         return acc + 1;
       }
       return acc;
     }, 0);
     accuracy = (totalCorrect / game.questions.length) * 100;
-  } else if (game.gameType === "open_ended") {
-    let totalPercentage = game.questions.reduce((acc, question) => {
+  } else {
+    const totalPercentage = game.questions.reduce((acc: number, question: Question) => {
       return acc + (question.percentageCorrect ?? 0);
     }, 0);
     accuracy = totalPercentage / game.questions.length;
   }
+  
   accuracy = Math.round(accuracy * 100) / 100;
 
   return (
@@ -58,7 +63,7 @@ const Statistics = async (props: Props) => {
       <div className="p-8 mx-auto max-w-7xl mt-14">
         <div className="flex items-center justify-between space-y-2">
           <h2 className="text-3xl font-bold tracking-tight">Summary</h2>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-4">
             <Link href="/dashboard" className={buttonVariants()}>
               <LucideLayoutDashboard className="mr-2" />
               Back to Dashboard
