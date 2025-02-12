@@ -55,6 +55,7 @@ model Game {
   topic       String
   timeEnded   DateTime?
   gameType    GameType
+  level       String     @default("intermediate")
   questions   Question[]
   user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -69,14 +70,14 @@ model topic_count {
 
 model Question {
   id                String   @id @default(cuid())
-  question          String
-  answer            String
+  question          String   @db.Text
+  answer            String   @db.Text
   gameId            String
   options           Json?
   percentageCorrect Float?
   isCorrect         Boolean?
   questionType      GameType
-  userAnswer        String?
+  userAnswer        String?  @db.Text
   game              Game     @relation(fields: [gameId], references: [id])
 
   @@index([gameId])
