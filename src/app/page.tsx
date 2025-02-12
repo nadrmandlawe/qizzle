@@ -29,7 +29,7 @@ export default async function Home() {
       </nav>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col items-center justify-center relative">
+      <div className="flex-1 flex flex-col items-center justify-center relative px-4">
         <div className="text-center max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-5xl md:text-6xl font-bold tracking-tight mb-6">
             Welcome to Quizmify

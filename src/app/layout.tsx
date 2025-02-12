@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Suspense } from "react";
 import "./globals.css";
+import Footer from "@/components/footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,12 +22,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn(inter.className, "antialiased h-screen w-screen")}>
+      <body className={cn(inter.className, "antialiased min-h-screen ")}>
         <Providers>
           <Navbar />
           <main className="flex-grow overflow-auto">
             <Suspense>{children}</Suspense>
           </main>
+          <Footer />
           <Toaster/>
         </Providers>
       </body>
