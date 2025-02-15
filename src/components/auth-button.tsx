@@ -1,5 +1,6 @@
 "use client";
 
+import { IconBrandGoogleFilled } from "@tabler/icons-react";
 import { LogOut } from "lucide-react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { Button } from "./ui/button";
@@ -41,6 +42,7 @@ const AuthButton = ({ minimal = false }: Props) => {
         signIn("google");
       }}
     >
+      <IconBrandGoogleFilled className="size-4 mr-2" />
       Sign In
     </Button>
   );

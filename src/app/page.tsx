@@ -2,7 +2,7 @@ import SignInButton from "@/components/sign-in-button";
 import StartLearningButton from "@/components/start-learning-button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { getAuthSession } from "@/lib/nextauth";
-import { Brain, Calculator, History as HistoryIcon, Palette, Sparkles, Target, TestTube, Zap } from "lucide-react";
+import { Brain, FileText, Sparkles, Target, Upload, Zap } from "lucide-react";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -45,10 +45,10 @@ export default async function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
           {/* Card 1 - AI Card */}
           <Card className="border-0 shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl items-center justify-center flex flex-col">
-        <CardHeader>
+            <CardHeader>
               <CardTitle>AI-Powered Learning</CardTitle>
-        </CardHeader>
-        <CardContent>
+            </CardHeader>
+            <CardContent>
               <div className="flex items-center space-x-3 mb-6 bg-blue-50 dark:bg-blue-900/10 p-4 rounded-2xl">
                 <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
                   <Brain className="w-6 h-6 text-blue-600 dark:text-blue-400" />
@@ -79,39 +79,38 @@ export default async function Home() {
             </CardContent>
           </Card>
 
-          {/* Card 2 - Topics */}
+          {/* Card 2 - PDF Quiz Feature */}
           <Card className="border-0 shadow-lg lg:translate-y-8 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl items-center justify-center flex flex-col">
             <CardHeader>
-              <CardTitle>Popular Topics on Quizmify</CardTitle>
+              <CardTitle>Create Quizzes from PDFs</CardTitle>
             </CardHeader>
-            <CardContent className="grid grid-cols-2 gap-4">
-              <div className="flex flex-col items-center p-4 bg-blue-50 dark:bg-blue-900/10 rounded-2xl hover:scale-105 transition-transform cursor-pointer">
-                <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-3">
-                  <Calculator className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+            <CardContent>
+              <div className="flex items-center space-x-3 mb-6 bg-purple-50 dark:bg-purple-900/10 p-4 rounded-2xl">
+                <div className="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                  <FileText className="w-6 h-6 text-purple-600 dark:text-purple-400" />
                 </div>
-                <span className="text-sm font-medium">Mathematics</span>
-                <span className="text-xs text-gray-500 mt-1">500+ Quizzes</span>
+                <div className="flex flex-col">
+                  <span className="text-lg font-bold">PDF to Quiz</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Transform your documents</span>
+                </div>
               </div>
-              <div className="flex flex-col items-center p-4 bg-green-50 dark:bg-green-900/10 rounded-2xl hover:scale-105 transition-transform cursor-pointer">
-                <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mb-3">
-                  <TestTube className="w-6 h-6 text-green-600 dark:text-green-400" />
+              <div className="space-y-4">
+                <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-800/50 p-3 rounded-xl">
+                  <Upload className="w-5 h-5 mr-3 text-purple-500" />
+                  <span>Upload any PDF and create instant quizzes</span>
                 </div>
-                <span className="text-sm font-medium">Science</span>
-                <span className="text-xs text-gray-500 mt-1">450+ Quizzes</span>
-              </div>
-              <div className="flex flex-col items-center p-4 bg-purple-50 dark:bg-purple-900/10 rounded-2xl hover:scale-105 transition-transform cursor-pointer">
-                <div className="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mb-3">
-                  <HistoryIcon className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+                <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-800/50 p-3 rounded-xl">
+                  <Brain className="w-5 h-5 mr-3 text-purple-500" />
+                  <span>AI generates relevant questions</span>
                 </div>
-                <span className="text-sm font-medium">History</span>
-                <span className="text-xs text-gray-500 mt-1">300+ Quizzes</span>
-              </div>
-              <div className="flex flex-col items-center p-4 bg-yellow-50 dark:bg-yellow-900/10 rounded-2xl hover:scale-105 transition-transform cursor-pointer">
-                <div className="w-12 h-12 rounded-full bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center mb-3">
-                  <Palette className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
+                <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-800/50 p-3 rounded-xl">
+                  <FileText className="w-5 h-5 mr-3 text-purple-500" />
+                  <span>Perfect for study materials and textbooks</span>
                 </div>
-                <span className="text-sm font-medium">Arts</span>
-                <span className="text-xs text-gray-500 mt-1">250+ Quizzes</span>
+                <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-800/50 p-3 rounded-xl">
+                  <Zap className="w-5 h-5 mr-3 text-purple-500" />
+                  <span>Get instant quiz results and feedback</span>
+                </div>
               </div>
             </CardContent>
             <CardFooter>
@@ -139,8 +138,8 @@ export default async function Home() {
                   <Target className="w-4 h-4 text-primary" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium">Adaptive Difficulty</p>
-                  <p className="text-xs text-gray-500">Grows with your knowledge</p>
+                  <p className="text-sm font-medium">Multiple Quiz Types</p>
+                  <p className="text-xs text-gray-500">MCQ and Open-ended questions</p>
                 </div>
               </div>
               <div className="flex items-center p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl">
@@ -161,8 +160,8 @@ export default async function Home() {
                   <p className="text-xs text-gray-500">Get detailed feedback immediately</p>
                 </div>
               </div>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Floating Elements */}

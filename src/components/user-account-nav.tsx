@@ -59,8 +59,8 @@ const UserAccountNav = ({ user }: Props) => {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           className="cursor-pointer gap-2"
-          onSelect={(event) => {
-            event.preventDefault();
+          onSelect={() => {
+       
             router.push("/dashboard");
           }}
         >
@@ -70,8 +70,7 @@ const UserAccountNav = ({ user }: Props) => {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           className="cursor-pointer gap-2"
-          onSelect={(event) => {
-            event.preventDefault();
+          onSelect={() => {
             router.push("/quiz");
           }}
         >
@@ -81,8 +80,8 @@ const UserAccountNav = ({ user }: Props) => {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           className="cursor-pointer gap-2"
-          onSelect={(event) => {
-            event.preventDefault();
+          onSelect={() => {
+
             router.push("/history");
           }}
         >
