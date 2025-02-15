@@ -1,38 +1,40 @@
 "use client";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
 } from "@/components/ui/card";
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/components/ui/form";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import { quizCreationSchema } from "@/schemas/forms/quiz";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
-import { BookOpen, CopyCheck } from "lucide-react";
+import { BookOpen, CopyCheck, FileText, Upload } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
+import { useDropzone } from "react-dropzone";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import { Progress } from "../ui/progress";
 import { Separator } from "../ui/separator";
 import { useToast } from "../ui/use-toast";
 
@@ -67,32 +69,86 @@ const QuizCreation = ({ topic: topicParam, level: levelParam }: Props) => {
     },
   });
 
+  const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
+  const [uploadProgress, setUploadProgress] = React.useState(0);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    accept: {
+      'application/pdf': ['.pdf']
+    },
+    maxFiles: 1,
+    onDrop: (acceptedFiles) => {
+      setSelectedFile(acceptedFiles[0]);
+      setUploadProgress(0);
+    }
+  });
+
   const onSubmit = async (data: Input) => {
     setShowLoader(true);
-    getQuestions(data, {
-      onError: (error) => {
-        setShowLoader(false);
-        if (error instanceof AxiosError) {
-          if (error.response?.status === 500) {
-            toast({
-              title: "Error",
-              description: "Something went wrong. Please try again later.",
-              variant: "destructive",
-            });
-          }
-        }
-      },
-      onSuccess: ({ gameId }: { gameId: string }) => {
+    
+    if (selectedFile) {
+      // Handle PDF quiz creation
+      const formData = new FormData();
+      formData.append('pdf', selectedFile);
+      formData.append('amount', data.amount.toString());
+      formData.append('type', data.type);
+      formData.append('level', data.level);
+
+      try {
+        const response = await axios.post("/api/pdf-quiz", formData, {
+          onUploadProgress: (progressEvent) => {
+            if (progressEvent.total) {
+              const progress = (progressEvent.loaded / progressEvent.total) * 100;
+              setUploadProgress(progress);
+            }
+          },
+        });
+        
         setFinishedLoading(true);
         setTimeout(() => {
-          if (form.getValues("type") === "mcq") {
-            router.push(`/play/mcq/${gameId}`);
-          } else if (form.getValues("type") === "open_ended") {
-            router.push(`/play/open-ended/${gameId}`);
+          if (data.type === "mcq") {
+            router.push(`/play/mcq/${response.data.gameId}`);
+          } else {
+            router.push(`/play/open-ended/${response.data.gameId}`);
           }
         }, 2000);
-      },
-    });
+      } catch (error) {
+        setShowLoader(false);
+        if (error instanceof AxiosError) {
+          toast({
+            title: "Error",
+            description: error.response?.data.error || "Something went wrong. Please try again later.",
+            variant: "destructive",
+          });
+        }
+      }
+    } else {
+      // Handle regular quiz creation
+      getQuestions(data, {
+        onError: (error) => {
+          setShowLoader(false);
+          if (error instanceof AxiosError) {
+            if (error.response?.status === 500) {
+              toast({
+                title: "Error",
+                description: "Something went wrong. Please try again later.",
+                variant: "destructive",
+              });
+            }
+          }
+        },
+        onSuccess: ({ gameId }: { gameId: string }) => {
+          setFinishedLoading(true);
+          setTimeout(() => {
+            if (data.type === "mcq") {
+              router.push(`/play/mcq/${gameId}`);
+            } else {
+              router.push(`/play/open-ended/${gameId}`);
+            }
+          }, 2000);
+        },
+      });
+    }
   };
   form.watch();
 
@@ -105,28 +161,75 @@ const QuizCreation = ({ topic: topicParam, level: levelParam }: Props) => {
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl font-bold">Quiz Creation</CardTitle>
-          <CardDescription>Choose a topic</CardDescription>
+          <CardDescription>Choose a topic or upload a PDF</CardDescription>
         </CardHeader>
         <CardContent>
+          <div {...getRootProps()} className="border-2 border-dashed rounded-lg p-6 mb-8 cursor-pointer hover:border-primary transition-colors">
+            <input {...getInputProps()} />
+            <div className="flex flex-col items-center justify-center gap-2">
+              <Upload className="w-8 h-8 text-gray-400" />
+              {isDragActive ? (
+                <p>Drop the PDF file here</p>
+              ) : (
+                <>
+                  <p className="text-sm text-gray-600">Drag & drop a PDF file here, or click to select</p>
+                  <p className="text-xs text-gray-400">PDF files only</p>
+                </>
+              )}
+            </div>
+          </div>
+          {selectedFile && (
+            <div className="mb-8">
+              <Card>
+                <CardHeader className="flex flex-row items-center gap-4">
+                  <FileText className="w-8 h-8 text-blue-500" />
+                  <div>
+                    <CardTitle>Selected PDF</CardTitle>
+                    <CardDescription>
+                      File: {selectedFile.name}
+                    </CardDescription>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-muted-foreground">Size:</span>
+                      <span>{Math.round(selectedFile.size / 1024)} KB</span>
+                    </div>
+                  </div>
+                  {uploadProgress > 0 && uploadProgress < 100 && (
+                    <div className="w-full space-y-2 mt-4">
+                      <Progress value={uploadProgress} className="w-full" />
+                      <p className="text-sm text-gray-500">
+                        Uploading: {Math.round(uploadProgress)}%
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          )}
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <FormField
-                control={form.control}
-                name="topic"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Topic</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter a topic" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      Please provide any topic you would like to be quizzed on
-                      here.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {!selectedFile && (
+                <FormField
+                  control={form.control}
+                  name="topic"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Topic</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter a topic" {...field} />
+                      </FormControl>
+                      <FormDescription>
+                        Please provide any topic you would like to be quizzed on
+                        here.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
               <FormField
                 control={form.control}
                 name="amount"
@@ -161,7 +264,7 @@ const QuizCreation = ({ topic: topicParam, level: levelParam }: Props) => {
                   <FormItem>
                     <FormLabel>Difficulty Level</FormLabel>
                     <FormControl>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select onValueChange={field.onChange} defaultValue={field.value || "intermediate"}>
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select a difficulty level" />
                         </SelectTrigger>
@@ -173,7 +276,7 @@ const QuizCreation = ({ topic: topicParam, level: levelParam }: Props) => {
                       </Select>
                     </FormControl>
                     <FormDescription>
-                      Select the difficulty level of the questions.
+                      Select the difficulty level for your quiz questions.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>

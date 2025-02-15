@@ -56,6 +56,8 @@ model Game {
   timeEnded   DateTime?
   gameType    GameType
   level       String     @default("intermediate")
+  pdfName     String?
+  pdfUrl      String?    @db.Text
   questions   Question[]
   user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 

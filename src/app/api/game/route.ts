@@ -159,52 +159,45 @@ export async function GET(req: Request) {
     if (!session?.user) {
       return NextResponse.json(
         { error: "You must be logged in to view games." },
-        {
-          status: 401,
-        }
+        { status: 401 }
       );
     }
+
     const url = new URL(req.url);
     const gameId = url.searchParams.get("gameId");
     if (!gameId) {
       return NextResponse.json(
         { error: "You must provide a game id." },
-        {
-          status: 400,
-        }
+        { status: 400 }
       );
     }
 
     const game = await prisma.game.findUnique({
       where: {
         id: gameId,
+        userId: session.user.id,
       },
       include: {
         questions: true,
       },
     });
+
     if (!game) {
       return NextResponse.json(
-        { error: "Game not found." },
-        {
-          status: 404,
-        }
+        { error: "Game not found or unauthorized." },
+        { status: 404 }
       );
     }
 
     return NextResponse.json(
       { game },
-      {
-        status: 200,
-      }
+      { status: 200 }
     );
   } catch (error) {
     console.error("Error in GET game:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "An unexpected error occurred" },
-      {
-        status: 500,
-      }
+      { error: "An unexpected error occurred" },
+      { status: 500 }
     );
   }
 }

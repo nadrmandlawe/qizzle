@@ -1,5 +1,6 @@
 "use client";
 
+import { IconHistory, IconLayoutDashboard, IconPlus } from "@tabler/icons-react";
 import { LogOut } from "lucide-react";
 import { User } from "next-auth";
 import { signOut } from "next-auth/react";
@@ -7,11 +8,11 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 
 type Props = {
@@ -57,22 +58,35 @@ const UserAccountNav = ({ user }: Props) => {
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          className="cursor-pointer"
+          className="cursor-pointer gap-2"
           onSelect={(event) => {
             event.preventDefault();
             router.push("/dashboard");
           }}
         >
-          Dashboard
+          <IconLayoutDashboard className="size-4" />
+        Dashboard
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          className="cursor-pointer"
+          className="cursor-pointer gap-2"
+          onSelect={(event) => {
+            event.preventDefault();
+            router.push("/quiz");
+          }}
+        >
+          <IconPlus className="size-4" />
+          Create Quiz
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          className="cursor-pointer gap-2"
           onSelect={(event) => {
             event.preventDefault();
             router.push("/history");
           }}
         >
+          <IconHistory className="size-4" />
           History
         </DropdownMenuItem>
         <DropdownMenuSeparator />

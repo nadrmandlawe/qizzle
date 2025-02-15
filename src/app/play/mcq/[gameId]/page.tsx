@@ -34,10 +34,41 @@ const MCQPage = async (props: Props) => {
       },
     },
   });
+
   if (!game || game.gameType === "open_ended") {
     return redirect("/quiz");
   }
-  return <MCQ game={game} />;
+
+  return (
+    <div className="max-w-7xl mx-auto p-8 mt-16">
+      {/* {game.pdfName && (
+        <Card className="mb-8">
+          <CardHeader className="flex flex-row items-center gap-4">
+            <FileText className="w-8 h-8 text-blue-500" />
+            <div>
+              <CardTitle>PDF Quiz</CardTitle>
+              <CardDescription>
+                Questions generated from: {game.pdfName}
+              </CardDescription>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">Difficulty:</span>
+                <span className="capitalize">{game.level}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">Questions:</span>
+                <span>{game.questions.length}</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )} */}
+      <MCQ game={game} />
+    </div>
+  );
 };
 
 export default MCQPage;

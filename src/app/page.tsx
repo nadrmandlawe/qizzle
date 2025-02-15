@@ -45,10 +45,10 @@ export default async function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
           {/* Card 1 - AI Card */}
           <Card className="border-0 shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl items-center justify-center flex flex-col">
-            <CardHeader>
+        <CardHeader>
               <CardTitle>AI-Powered Learning</CardTitle>
-            </CardHeader>
-            <CardContent>
+        </CardHeader>
+        <CardContent>
               <div className="flex items-center space-x-3 mb-6 bg-blue-50 dark:bg-blue-900/10 p-4 rounded-2xl">
                 <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
                   <Brain className="w-6 h-6 text-blue-600 dark:text-blue-400" />
@@ -161,8 +161,8 @@ export default async function Home() {
                   <p className="text-xs text-gray-500">Get detailed feedback immediately</p>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+        </CardContent>
+      </Card>
         </div>
 
         {/* Floating Elements */}

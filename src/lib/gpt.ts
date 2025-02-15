@@ -154,6 +154,34 @@ interface OutputFormat {
   [key: string]: string | string[] | OutputFormat;
 }
 
+function parseGeminiResponse(res: string) {
+  // Remove any markdown formatting
+  res = res.replace(/```json\n?|```\n?/g, '');
+  
+  // Try to parse as a single JSON array first
+  try {
+    return JSON.parse(res);
+  } catch (e) {
+    // If that fails, try to parse as multiple JSON objects
+    try {
+      // Split by newlines and filter out empty lines
+      const jsonStrings = res.split('\n').filter(line => line.trim());
+      
+      // Parse each JSON object separately and combine into an array
+      const jsonObjects = jsonStrings
+        .filter(str => str.trim().startsWith('{') && str.trim().endsWith('}'))
+        .map(str => JSON.parse(str.trim()));
+      
+      if (jsonObjects.length > 0) {
+        return jsonObjects;
+      }
+    } catch (e2) {
+      console.error("Failed to parse individual JSON objects:", e2);
+    }
+  }
+  throw new Error("Failed to parse response as JSON");
+}
+
 export async function strict_output(
   system_prompt: string,
   user_prompt: string | string[],
@@ -179,7 +207,7 @@ export async function strict_output(
   for (let i = 0; i < num_tries; i++) {
     let output_format_prompt = `\nYou are to output the following in json format: ${JSON.stringify(
       output_format
-    )}. \nDo not put quotation marks or escape character \\ in the output fields.`;
+    )}. \nDo not put quotation marks or escape character \\ in the output fields. Return the response as a valid JSON array.`;
 
     // Extract difficulty level from user prompt if it exists
     const difficultyMatch = user_prompt.toString().match(/random (basic and simple|moderately challenging|very challenging and complex)/);
@@ -203,21 +231,14 @@ export async function strict_output(
     }
 
     if (list_input) {
-      output_format_prompt += `\nGenerate a list of json, one json for each input element.`;
+      output_format_prompt += `\nGenerate a list of json, one json for each input element. Wrap all responses in a JSON array using square brackets [].`;
     }
 
     const prompt = system_prompt + output_format_prompt + error_msg + "\n" + user_prompt.toString();
 
     try {
       const response = await model.generateContent([prompt]);
-
       let res = response.response.text();
-
-      // Remove code block markers and clean up the response
-      res = res.replace(/```json|```/g, "").trim();
-
-      // Ensure we replace apostrophes in text only
-      res = res.replace(/(\w)"(\w)/g, "$1'$2");
 
       if (verbose) {
         console.log("System prompt:", system_prompt + output_format_prompt + error_msg);
@@ -226,11 +247,11 @@ export async function strict_output(
       }
 
       try {
-        let output = JSON.parse(res);
+        let output = parseGeminiResponse(res);
 
         if (list_input) {
           if (!Array.isArray(output)) {
-            throw new Error("Output format not in a list of json");
+            output = [output];
           }
         } else {
           output = [output];
