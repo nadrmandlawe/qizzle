@@ -1,11 +1,13 @@
 # 🎯 Quizmify - AI-Powered Quiz Platform
 
-Quizmify is an intelligent quiz generation platform that leverages the power of AI to create personalized learning experiences. Challenge yourself with dynamically generated questions across any topic, track your progress, and improve your knowledge through interactive quizzes.
+Quizmify is an intelligent quiz generation platform that leverages the power of AI to create personalized learning experiences. Challenge yourself with dynamically generated questions across any topic, transform your PDFs into interactive quizzes, and improve your knowledge through adaptive learning.
 
 ## ✨ Features
 
 ### Core Features
-- 🤖 **AI-Powered Quiz Generation** - Utilizes Google's Gemini AI to create intelligent and contextually relevant questions
+- 🤖 **AI-Powered Quiz Generation** 
+  - Utilizes Google's Gemini AI for topic-based quizzes
+  - Transforms PDFs into interactive quizzes using Langchain
 - 🎯 **Multiple Quiz Types** 
   - Multiple Choice Questions (MCQ)
   - Open-ended Questions with AI-powered answer evaluation
@@ -13,6 +15,20 @@ Quizmify is an intelligent quiz generation platform that leverages the power of 
   - Detailed performance analytics
   - Topic-wise progress tracking
   - Historical quiz data visualization
+
+### PDF Quiz Generation
+- 📄 **PDF Processing**
+  - Upload any PDF document
+  - Automatic text extraction and processing using Langchain
+  - AI-generated questions based on document content
+- 📚 **Perfect for Education**
+  - Transform textbooks into quizzes
+  - Create assessments from study materials
+  - Instant quiz generation from lecture notes
+- 🔄 **Seamless Integration**
+  - Easy document upload
+  - Automatic question generation
+  - Download original PDF for reference
 
 ### User Experience
 - 🌓 **Dark/Light Mode** - Beautiful UI that adapts to your preference
@@ -25,6 +41,8 @@ Quizmify is an intelligent quiz generation platform that leverages the power of 
 - 🏷️ **Topic Filtering** - Organize and filter quizzes by topics
 - 📈 **Progress Tracking** - Monitor your improvement over time
 - 🔥 **Hot Topics** - Discover popular quiz categories
+- 💡 **Intelligent Scoring** - Advanced answer evaluation system
+- 📊 **Performance Analytics** - Track your learning progress
 
 ## 🛠️ Tech Stack
 
@@ -36,11 +54,13 @@ Quizmify is an intelligent quiz generation platform that leverages the power of 
 - **React Query** - Efficient server state management
 - **Next-Auth** - Secure authentication
 
-### Backend
+### Backend & AI
 - **Prisma** - Type-safe database ORM
 - **MySQL** - Reliable data storage
 - **Docker** - Containerized development environment
 - **Google Gemini API** - Advanced AI capabilities
+- **Langchain** - PDF processing and text extraction
+- **PDF.js** - PDF rendering and handling
 
 ### Authentication & Security
 - **NextAuth.js** - OAuth integration with Google
@@ -106,10 +126,10 @@ Quizmify is an intelligent quiz generation platform that leverages the power of 
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-
 ## 🙏 Acknowledgments
 
 - Thanks to the amazing open-source community
 - Powered by Google's Gemini AI
 - Built with Next.js and Vercel
+- PDF processing powered by Langchain
 
