@@ -39,7 +39,8 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     title: 'Quiz App',
-    statusBarStyle: 'default',
+    statusBarStyle: 'black-translucent',
+    
 
   },
 };
@@ -57,6 +58,8 @@ export const viewport: Viewport = {
   ],
   width: 'device-width',
   initialScale: 1,
+  viewportFit: 'cover',
+  userScalable: false,
 }
 
 export default function RootLayout({
