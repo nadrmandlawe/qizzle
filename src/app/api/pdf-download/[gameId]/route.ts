@@ -1,8 +1,6 @@
 import { prisma } from "@/lib/db";
 import { getAuthSession } from "@/lib/nextauth";
-import fs from "fs/promises";
 import { NextResponse } from "next/server";
-import path from "path";
 
 export async function GET(
   req: Request,
@@ -22,6 +20,7 @@ export async function GET(
       select: {
         pdfUrl: true,
         pdfName: true,
+        pdfData: true,
       },
     });
 
@@ -29,30 +28,23 @@ export async function GET(
       return new NextResponse("Game not found", { status: 404 });
     }
 
-    if (!game.pdfUrl || !game.pdfName) {
+    if (!game.pdfData) {
       return new NextResponse("No PDF file associated with this game", { status: 404 });
     }
 
-    // Get the absolute file path
-    const filePath = path.join(process.cwd(), 'public', game.pdfUrl);
+    // Convert base64 to Buffer
+    const pdfBuffer = Buffer.from(game.pdfData, 'base64');
 
-    try {
-      // Read the file
-      const fileBuffer = await fs.readFile(filePath);
-
-      // Set the appropriate headers for file download
-      const headers = new Headers();
-      headers.set('Content-Type', 'application/pdf');
-      headers.set('Content-Disposition', `attachment; filename="${game.pdfName}"`);
-      
-      return new NextResponse(fileBuffer, {
-        status: 200,
-        headers,
-      });
-    } catch (error) {
-      console.error("Error reading PDF file:", error);
-      return new NextResponse("PDF file not found", { status: 404 });
-    }
+    // Set the appropriate headers for file download
+    const headers = new Headers();
+    headers.set('Content-Type', 'application/pdf');
+    headers.set('Content-Disposition', `attachment; filename="${game.pdfName}"`);
+    headers.set('Content-Length', pdfBuffer.length.toString());
+    
+    return new NextResponse(pdfBuffer, {
+      status: 200,
+      headers,
+    });
   } catch (error) {
     console.error("Error in PDF download:", error);
     return new NextResponse("Internal Server Error", { status: 500 });

@@ -58,6 +58,7 @@ model Game {
   level       String     @default("intermediate")
   pdfName     String?
   pdfUrl      String?    @db.Text
+  pdfData     String?    @db.Text
   questions   Question[]
   user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
