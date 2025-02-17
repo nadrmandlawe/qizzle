@@ -36,13 +36,13 @@ export const metadata: Metadata = {
     ],
   },
   manifest: '/favicon_io/site.webmanifest',
-  appleWebApp: {
-    // capable: true,
-    title: 'Qizzle',
-    statusBarStyle: 'black-translucent',
+  // appleWebApp: {
+  //   capable: true,
+  //   title: 'Qizzle',
+  //   statusBarStyle: 'black-translucent',
     
 
-  },
+  // },
 };
 
 export const viewport: Viewport = {
