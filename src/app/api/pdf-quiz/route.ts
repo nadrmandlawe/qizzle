@@ -201,20 +201,20 @@ export async function POST(req: Request) {
       }
 
       // Update topic count
-      await prisma.topic_count.upsert({
-        where: {
-          topic: pdfFile.name.replace('.pdf', ''),
-        },
-        create: {
-          topic: pdfFile.name.replace('.pdf', ''),
-          count: 1,
-        },
-        update: {
-          count: {
-            increment: 1,
-          },
-        },
-      });
+      // await prisma.topic_count.upsert({
+      //   where: {
+      //     topic: pdfFile.name.replace('.pdf', ''),
+      //   },
+      //   create: {
+      //     topic: pdfFile.name.replace('.pdf', ''),
+      //     count: 1,
+      //   },
+      //   update: {
+      //     count: {
+      //       increment: 1,
+      //     },
+      //   },
+      // });
 
       console.log("Questions saved to database successfully");
     } catch (dbError) {
