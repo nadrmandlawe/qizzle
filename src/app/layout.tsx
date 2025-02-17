@@ -38,7 +38,6 @@ export const metadata: Metadata = {
   manifest: '/favicon_io/site.webmanifest',
   appleWebApp: {
     capable: true,
-    statusBarStyle: 'default',
     title: 'Quiz App',
   },
 };
