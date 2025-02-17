@@ -1,9 +1,9 @@
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 import { prisma } from "@/lib/db";
 import { topic_count } from "@prisma/client";
@@ -26,7 +26,7 @@ const HotTopicsCard = async () => {
           Click on a topic to start a quiz on it.
         </CardDescription>
       </CardHeader>
-      <CardContent className="pl-2 cursor-pointer">
+      <CardContent className="pl-2 cursor-pointer text-muted-foreground">
         <WordCloud formattedTopics={formattedTopics} />
       </CardContent>
     </Card>
