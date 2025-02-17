@@ -63,4 +63,9 @@ next-env.d.ts
 .temp
 .tmp
 .cache
+<<<<<<< HEAD
 >>>>>>> b3b16a92 (update app name and switch to prisma mysql to  postgresql)
+=======
+
+.cursorrules
+>>>>>>> d8987829 (chore: update gitignore and remove tracked files that should be ignored)
