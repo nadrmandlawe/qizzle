@@ -3,7 +3,7 @@ import Navbar from "@/components/navbar";
 import Providers from "@/components/providers";
 import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { Suspense } from "react";
 import "./globals.css";
@@ -39,8 +39,25 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     title: 'Quiz App',
+    statusBarStyle: 'default',
+
   },
 };
+
+export const viewport: Viewport = {
+  themeColor: [
+    { 
+      media: '(prefers-color-scheme: light)', 
+      color: 'hsl(var(--background))' 
+    },
+    { 
+      media: '(prefers-color-scheme: dark)', 
+      color: 'hsl(var(--background))' 
+    },
+  ],
+  width: 'device-width',
+  initialScale: 1,
+}
 
 export default function RootLayout({
   children,
