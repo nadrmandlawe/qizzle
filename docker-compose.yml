@@ -1,20 +1,23 @@
 version: '3.8'
 
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: qizzle-mysql
+  postgres:
+    image: postgres:16
+    container_name: qizzle-postgres
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: qizzle
-      MYSQL_DATABASE: qizzle
-      MYSQL_USER: qizzle
-      MYSQL_PASSWORD: qizzle
+      POSTGRES_USER: qizzle
+      POSTGRES_PASSWORD: qizzle
+      POSTGRES_DB: qizzle
     ports:
-      - "3306:3306"
+      - "5432:5432"
     volumes:
-      - mysql_data:/var/lib/mysql
-    command: --default-authentication-plugin=mysql_native_password
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U qizzle" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   adminer:
     image: adminer:latest
@@ -23,7 +26,9 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - mysql
+      - postgres
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
 
 volumes:
-  mysql_data:
+  postgres_data:

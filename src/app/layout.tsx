@@ -12,7 +12,35 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Qizzle",
-  description: "Quiz yourself on anything!"
+  description: "Quiz yourself on anything!",
+  icons: {
+    icon: [
+      {
+        url: '/favicon_io/favicon-32x32.png',
+        sizes: '32x32',
+      },
+      {
+        url: '/favicon_io/android-chrome-192x192.png',
+        sizes: '192x192',
+      },
+      {
+        url: '/favicon_io/android-chrome-512x512.png',
+        sizes: '512x512',
+      },
+    ],
+    apple: [
+      {
+        url: '/favicon_io/apple-icon.png',
+        sizes: '180x180',
+      },
+    ],
+  },
+  manifest: '/favicon_io/site.webmanifest',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Quiz App',
+  },
 };
 
 export default function RootLayout({
