@@ -28,7 +28,7 @@ export async function POST(req: Request) {
     let questions;
     if (type === "open_ended") {
       questions = await strict_output(
-        `You are a helpful AI that is able to generate ${difficulty} questions and answers. ${difficultyInstruction} The length of each answer should not be more than 15 words, store all the pairs of answers and questions in a JSON array`,
+        `You are a helpful AI that is able to generate ${difficulty} questions and answers. ${difficultyInstruction} The length of each answer should not be more than 15 words. You MUST generate exactly ${amount} questions, no more and no less.`,
         new Array(amount).fill(
           `Generate a random ${difficulty} open-ended question about ${topic}. Remember to maintain ${level} difficulty level.`
         ),
@@ -39,7 +39,7 @@ export async function POST(req: Request) {
       );
     } else if (type === "mcq") {
       questions = await strict_output(
-        `You are a helpful AI that is able to generate ${difficulty} MCQ questions and answers. ${difficultyInstruction} The length of each answer should not be more than 15 words, store all answers and questions and options in a JSON array`,
+        `You are a helpful AI that is able to generate ${difficulty} MCQ questions and answers. ${difficultyInstruction} The length of each answer should not be more than 15 words. You MUST generate exactly ${amount} questions, no more and no less.`,
         new Array(amount).fill(
           `Generate a random ${difficulty} mcq question about ${topic}. Remember to maintain ${level} difficulty level.`
         ),
@@ -50,6 +50,14 @@ export async function POST(req: Request) {
           option2: "option2 with max length of 15 words",
           option3: "option3 with max length of 15 words",
         }
+      );
+    }
+
+    // Verify we have exactly the requested number of questions
+    if (!questions || questions.length !== amount) {
+      return NextResponse.json(
+        { error: `Failed to generate exactly ${amount} questions. Please try again.` },
+        { status: 400 }
       );
     }
 

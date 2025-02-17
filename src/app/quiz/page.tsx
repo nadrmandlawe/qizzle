@@ -3,7 +3,7 @@ import { getAuthSession } from "@/lib/nextauth";
 import { redirect } from "next/navigation";
 
 export const metadata = {
-  title: "Quiz | Quizmify",
+  title: "Quiz | Qizzle",
   description: "Quiz yourself on anything!"
 };
 

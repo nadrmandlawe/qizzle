@@ -158,9 +158,14 @@ function parseGeminiResponse(res: string) {
   // Remove any markdown formatting
   res = res.replace(/```json\n?|```\n?/g, '');
   
-  // Try to parse as a single JSON array first
   try {
-    return JSON.parse(res);
+    // Try to parse as a JSON array first
+    const parsed = JSON.parse(res);
+    if (Array.isArray(parsed)) {
+      return parsed;
+    }
+    // If it's a single object, wrap it in an array
+    return [parsed];
   } catch (e) {
     // If that fails, try to parse as multiple JSON objects
     try {
@@ -192,113 +197,40 @@ export async function strict_output(
   temperature: number = 1,
   num_tries: number = 3,
   verbose: boolean = false
-): Promise<
-  {
-    question: string;
-    answer: string;
-  }[]
-> {
+): Promise<any> {
   const list_input = Array.isArray(user_prompt);
-  const dynamic_elements = /<.*?>/.test(JSON.stringify(output_format));
-  const list_output = /\[.*?\]/.test(JSON.stringify(output_format));
-
-  let error_msg = "";
+  const prompts = list_input ? user_prompt : [user_prompt];
+  const expectedCount = prompts.length;
 
   for (let i = 0; i < num_tries; i++) {
-    let output_format_prompt = `\nYou are to output the following in json format: ${JSON.stringify(
-      output_format
-    )}. \nDo not put quotation marks or escape character \\ in the output fields. Return the response as a valid JSON array.`;
-
-    // Extract difficulty level from user prompt if it exists
-    const difficultyMatch = user_prompt.toString().match(/random (basic and simple|moderately challenging|very challenging and complex)/);
-    const difficultyLevel = difficultyMatch ? difficultyMatch[1] : 'moderately challenging';
-
-    // Add difficulty-specific instructions to system prompt
-    const difficultyPrompt = `\nYou are an expert quiz generator specializing in creating ${difficultyLevel} questions.
-    For basic and simple questions: Focus on fundamental concepts and straightforward answers.
-    For moderately challenging questions: Include some complexity and require deeper understanding.
-    For very challenging questions: Test advanced knowledge and critical thinking skills.
-    Current difficulty level: ${difficultyLevel}.\n`;
-
-    system_prompt = difficultyPrompt + system_prompt;
-
-    if (list_output) {
-      output_format_prompt += `\nIf output field is a list, classify output into the best element of the list.`;
-    }
-
-    if (dynamic_elements) {
-      output_format_prompt += `\nAny text enclosed by < and > indicates you must generate content to replace it. Example input: Go to <location>, Example output: Go to the garden\nAny output key containing < and > indicates you must generate the key name to replace it. Example input: {'<location>': 'description of location'}, Example output: {school: a place for education}`;
-    }
-
-    if (list_input) {
-      output_format_prompt += `\nGenerate a list of json, one json for each input element. Wrap all responses in a JSON array using square brackets [].`;
-    }
-
-    const prompt = system_prompt + output_format_prompt + error_msg + "\n" + user_prompt.toString();
-
     try {
-      const response = await model.generateContent([prompt]);
-      let res = response.response.text();
+      const prompt = `${system_prompt}\n\nYou must generate exactly ${expectedCount} questions. No more, no less.\n\nFormat your response as a valid JSON array containing exactly ${expectedCount} objects with the following structure: ${JSON.stringify(output_format)}`;
+
+      const response = await model.generateContent([prompt + "\n" + prompts.join("\n")]);
+      const res = response.response.text();
 
       if (verbose) {
-        console.log("System prompt:", system_prompt + output_format_prompt + error_msg);
-        console.log("\nUser prompt:", user_prompt);
+        console.log("System prompt:", prompt);
+        console.log("\nUser prompt:", prompts);
         console.log("\nGemini response:", res);
       }
 
-      try {
-        let output = parseGeminiResponse(res);
-
-        if (list_input) {
-          if (!Array.isArray(output)) {
-            output = [output];
-          }
-        } else {
-          output = [output];
-        }
-
-        for (let index = 0; index < output.length; index++) {
-          for (const key in output_format) {
-            if (/<.*?>/.test(key)) continue;
-
-            if (!(key in output[index])) {
-              throw new Error(`${key} not in json output`);
-            }
-
-            if (Array.isArray(output_format[key])) {
-              const choices = output_format[key] as string[];
-              if (Array.isArray(output[index][key])) {
-                output[index][key] = output[index][key][0];
-              }
-              if (!choices.includes(output[index][key]) && default_category) {
-                output[index][key] = default_category;
-              }
-              if (output[index][key].includes(":")) {
-                output[index][key] = output[index][key].split(":")[0];
-              }
-            }
-          }
-
-          if (output_value_only) {
-            output[index] = Object.values(output[index]);
-            if (output[index].length === 1) {
-              output[index] = output[index][0];
-            }
-          }
-        }
-
-        return list_input ? output : output[0];
-      } catch (e) {
-        console.error("An error occurred while parsing JSON:", e);
-        console.error("Invalid JSON format:", res);
-        error_msg = `\n\nResult: ${res}\n\nError message: ${e}`;
+      const parsed = parseGeminiResponse(res);
+      
+      // Verify we have exactly the expected number of questions
+      if (parsed.length !== expectedCount) {
+        console.warn(`Generated ${parsed.length} questions, expected ${expectedCount}. Retrying...`);
+        continue;
       }
-    } catch (err) {
-      console.error("Error communicating with Gemini:", err);
+
+      return parsed;
+    } catch (error) {
+      console.error(`Attempt ${i + 1} failed:`, error);
+      if (i === num_tries - 1) throw error;
     }
   }
 
-  return [];
+  throw new Error(`Failed to generate exactly ${expectedCount} questions after ${num_tries} attempts`);
 }
 
 

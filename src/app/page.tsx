@@ -1,4 +1,3 @@
-import SignInButton from "@/components/sign-in-button";
 import StartLearningButton from "@/components/start-learning-button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { getAuthSession } from "@/lib/nextauth";
@@ -14,29 +13,16 @@ export default async function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950 relative overflow-hidden flex flex-col">
-      {/* Navigation */}
-      <nav className="relative z-10 flex justify-between items-center px-8 py-5">
-        <div className="flex items-center space-x-2">
-          <span className="text-2xl font-bold">Quizmify</span>
-        </div>
-        <div className="flex items-center space-x-4">
-          <a href="#" className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">About</a>
-          <a href="#" className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">Features</a>
-          <a href="#" className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">Blog</a>
-          <SignInButton text="Sign up" />
-        </div>
-      </nav>
-
+    <div className=" bg-white dark:bg-gray-950  flex flex-col  items-center justify-center min-h-dvh mt-20 lg:mt-0">
       {/* Main Content */}
       <div className="flex-1 flex flex-col items-center justify-center relative px-4">
         <div className="text-center max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-5xl md:text-6xl font-bold tracking-tight mb-6">
-            Welcome to Quizmify
+            Welcome to Qizzle
             <span className="block text-primary mt-2">Learn Smarter, Not Harder</span>
           </h1>
           <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-12 max-w-2xl mx-auto">
-            Join thousands of learners on Quizmify and experience the future of personalized learning. 
+            Join thousands of learners on Qizzle and experience the future of personalized learning. 
             Master any topic through AI-powered quizzes tailored just for you.
           </p>
         </div>
@@ -114,14 +100,14 @@ export default async function Home() {
               </div>
             </CardContent>
             <CardFooter>
-              <StartLearningButton />
+              <StartLearningButton label="Explore All Topics on Qizzle" />
             </CardFooter>
           </Card>
 
           {/* Card 3 - Smart Features */}
           <Card className="border-0 shadow-lg lg:translate-y-16 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl items-center justify-center flex flex-col">
             <CardHeader>
-              <CardTitle>Why Choose Quizmify?</CardTitle>
+              <CardTitle>Why Choose Qizzle?</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl">

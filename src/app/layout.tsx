@@ -1,3 +1,4 @@
+import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
 import Providers from "@/components/providers";
 import { Toaster } from "@/components/ui/toaster";
@@ -6,12 +7,11 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Suspense } from "react";
 import "./globals.css";
-import Footer from "@/components/footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Quizmify",
+  title: "Qizzle",
   description: "Quiz yourself on anything!"
 };
 
@@ -29,7 +29,7 @@ export default function RootLayout({
             <Suspense>{children}</Suspense>
           </main>
           <Footer />
-          <Toaster/>
+          <Toaster />
         </Providers>
       </body>
     </html>

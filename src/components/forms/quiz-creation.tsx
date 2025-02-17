@@ -1,27 +1,27 @@
 "use client";
 
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 import {
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
 } from "@/components/ui/form";
 import { Progress } from "@/components/ui/progress";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { quizCreationSchema } from "@/schemas/forms/quiz";
@@ -85,30 +85,68 @@ const QuizCreation = ({ topic: topicParam, level: levelParam }: Props) => {
 
   const onSubmit = async (data: Input) => {
     setShowLoader(true);
-    getQuestions(data, {
-      onError: (error) => {
+    
+    if (selectedFile) {
+      // Handle PDF quiz creation
+      const formData = new FormData();
+      formData.append('pdf', selectedFile);
+      formData.append('amount', data.amount.toString());
+      formData.append('type', data.type);
+      formData.append('level', data.level);
+
+      try {
+        const response = await axios.post("/api/pdf-quiz", formData, {
+          onUploadProgress: (progressEvent) => {
+            if (progressEvent.total) {
+              const progress = (progressEvent.loaded / progressEvent.total) * 100;
+              setUploadProgress(progress);
+            }
+          },
+        });
+        
+        setFinishedLoading(true);
+        setTimeout(() => {
+          if (data.type === "mcq") {
+            router.push(`/play/mcq/${response.data.gameId}`);
+          } else {
+            router.push(`/play/open-ended/${response.data.gameId}`);
+          }
+        }, 2000);
+      } catch (error) {
         setShowLoader(false);
         if (error instanceof AxiosError) {
-          if (error.response?.status === 500) {
+          toast({
+            title: "Error",
+            description: error.response?.data.error || "Something went wrong. Please try again later.",
+            variant: "destructive",
+          });
+        }
+      }
+    } else {
+      // Handle regular quiz creation
+      getQuestions(data, {
+        onError: (error) => {
+          setShowLoader(false);
+          if (error instanceof AxiosError) {
             toast({
               title: "Error",
-              description: "Something went wrong. Please try again later.",
+              description: error.response?.data.error || "Something went wrong. Please try again later.",
               variant: "destructive",
             });
           }
-        }
-      },
-      onSuccess: ({ gameId }: { gameId: string }) => {
-        setFinishedLoading(true);
-        setTimeout(() => {
-          if (methods.getValues("type") === "mcq") {
-            router.push(`/play/mcq/${gameId}`);
-          } else if (methods.getValues("type") === "open_ended") {
-            router.push(`/play/open-ended/${gameId}`);
-          }
-        }, 2000);
-      },
-    });
+        },
+        onSuccess: ({ gameId }) => {
+          setFinishedLoading(true);
+          setTimeout(() => {
+            if (data.type === "mcq") {
+              router.push(`/play/mcq/${gameId}`);
+            } else {
+              router.push(`/play/open-ended/${gameId}`);
+            }
+          }, 2000);
+        },
+      });
+    }
   };
 
   const handlePDFUpload = async () => {

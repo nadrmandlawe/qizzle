@@ -58,7 +58,7 @@ export async function POST(req: Request) {
     let questions;
     if (type === "mcq") {
       questions = await strict_output(
-        `You are a helpful AI that is able to generate multiple choice questions and answers based on provided text content. The questions should be clear, concise, and directly related to the content. You MUST generate exactly ${amount} questions.`,
+        `You are a helpful AI that is able to generate multiple choice questions and answers based on provided text content. The questions should be clear, concise, and directly related to the content. You MUST generate exactly ${amount} questions, no more and no less.`,
         new Array(amount).fill(
           `Generate a random ${level} multiple choice question about this text: ${pdfText}. The question must be unique and different from other questions.`
         ),
@@ -72,7 +72,7 @@ export async function POST(req: Request) {
       );
     } else {
       questions = await strict_output(
-        `You are a helpful AI that is able to generate open-ended questions and answers based on provided text content. The questions should encourage critical thinking and understanding. You MUST generate exactly ${amount} questions.`,
+        `You are a helpful AI that is able to generate open-ended questions and answers based on provided text content. The questions should encourage critical thinking and understanding. You MUST generate exactly ${amount} questions, no more and no less.`,
         new Array(amount).fill(
           `Generate a random ${level} open-ended question about this text: ${pdfText}. The question must be unique and different from other questions.`
         ),
@@ -83,11 +83,11 @@ export async function POST(req: Request) {
       );
     }
 
-    // Ensure we have the correct number of questions
-    if (questions.length !== amount) {
+    // Ensure we have exactly the requested number of questions
+    if (!questions || questions.length !== amount) {
       return NextResponse.json(
-        { error: "Failed to generate the requested number of questions" },
-        { status: 500 }
+        { error: `Failed to generate exactly ${amount} questions from the PDF. Please try again.` },
+        { status: 400 }
       );
     }
 

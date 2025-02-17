@@ -85,7 +85,7 @@ const MCQ = ({ game }: Props) => {
           toast({
             title: "Correct",
             description: "You got it right!",
-            variant: "default",
+            variant: "success",
           });
         } else {
           setStats((stats) => ({

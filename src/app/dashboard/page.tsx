@@ -5,7 +5,7 @@ import { getAuthSession } from "@/lib/nextauth";
 import { redirect } from "next/navigation";
 
 export const metadata = {
-  title: "Dashboard | Quizmify",
+  title: "Dashboard | Qizzle",
   description: "Quiz yourself on anything!"
 };
 

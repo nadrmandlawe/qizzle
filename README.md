@@ -1,6 +1,6 @@
-# 🎯 Quizmify - AI-Powered Quiz Platform
+# 🎯 Qizzle - AI-Powered Quiz Platform
 
-Quizmify is an intelligent quiz generation platform that leverages the power of AI to create personalized learning experiences. Challenge yourself with dynamically generated questions across any topic, transform your PDFs into interactive quizzes, and improve your knowledge through adaptive learning.
+Qizzle is an intelligent quiz generation platform that leverages the power of AI to create personalized learning experiences. Challenge yourself with dynamically generated questions across any topic, transform your PDFs into interactive quizzes, and improve your knowledge through adaptive learning.
 
 ## ✨ Features
 
@@ -76,8 +76,8 @@ Quizmify is an intelligent quiz generation platform that leverages the power of 
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/nadrmandlawe/quizmify.git
-   cd quizmify
+   git clone https://github.com/nadrmandlawe/qizzle.git
+   cd qizzle
    ```
 
 2. **Install dependencies**
@@ -89,7 +89,7 @@ Quizmify is an intelligent quiz generation platform that leverages the power of 
    Create a `.env` file with:
    ```env
    # Database
-   DATABASE_URL="mysql://quizmify:quizmify@localhost:3306/quizmify"
+   DATABASE_URL="mysql://qizzle:qizzle@localhost:3306/Qizzle"
 
    # Authentication
    NEXTAUTH_SECRET='your-nextauth-secret'

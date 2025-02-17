@@ -19,6 +19,15 @@ const AuthButton = ({ minimal = false }: Props) => {
     );
   }
 
+  if (status === "unauthenticated") {
+    return (
+      <Button>
+        <IconBrandGoogleFilled className="size-4 mr-2" />
+        Sign In
+      </Button>
+    );
+  }
+
   if (session?.user) {
     if (minimal) {
       return (
@@ -33,7 +42,7 @@ const AuthButton = ({ minimal = false }: Props) => {
       );
     }
 
-    return <UserAccountNav user={session.user} />;
+    return <UserAccountNav />;
   }
 
   return (

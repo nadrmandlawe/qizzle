@@ -3,13 +3,13 @@ version: '3.8'
 services:
   mysql:
     image: mysql:8.0
-    container_name: quizmify-mysql
+    container_name: qizzle-mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: quizmify
-      MYSQL_DATABASE: quizmify
-      MYSQL_USER: quizmify
-      MYSQL_PASSWORD: quizmify
+      MYSQL_ROOT_PASSWORD: qizzle
+      MYSQL_DATABASE: qizzle
+      MYSQL_USER: qizzle
+      MYSQL_PASSWORD: qizzle
     ports:
       - "3306:3306"
     volumes:
@@ -18,7 +18,7 @@ services:
 
   adminer:
     image: adminer:latest
-    container_name: quizmify-adminer
+    container_name: qizzle-adminer
     restart: always
     ports:
       - "8080:8080"
@@ -26,4 +26,4 @@ services:
       - mysql
 
 volumes:
-  mysql_data: 
+  mysql_data:

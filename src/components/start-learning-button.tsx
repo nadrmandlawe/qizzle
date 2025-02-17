@@ -5,7 +5,12 @@ import { Loader2 } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 
-const StartLearningButton = () => {
+type props = {
+  label: string;
+  icon?: React.ReactNode;
+}
+
+const StartLearningButton = ({ label, icon }: props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleClick = async () => {
@@ -26,16 +31,14 @@ const StartLearningButton = () => {
     >
       {isLoading ? (
         <>
-          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+          <Loader2 className="size-4 mr-2 animate-spin" />
           Connecting...
         </>
       ) : (
         <>
-Explore All Topics on Quizmify
-         
-          <svg className="w-4 h-4 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M9 5l7 7-7 7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
+{/* Explore All Topics on Qizzle */}
+{icon}
+         {label}
         </>
       )}
     </Button>

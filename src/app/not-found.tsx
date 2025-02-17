@@ -18,7 +18,7 @@ export default async function NotFound() {
           </div>
           <h2 className="text-3xl font-bold tracking-tight">Page Not Found</h2>
           <p className="text-lg text-gray-600 dark:text-gray-400 max-w-lg">
-            Oops! It seems your quest for knowledge has led you to an unexplored territory. Let's get you back on track.
+            Oops! It seems your quest for knowledge has led you to an unexplored territory. Let&apos;s get you back on track.
           </p>
           <div className="flex justify-center gap-4">
             <Button asChild size="lg">

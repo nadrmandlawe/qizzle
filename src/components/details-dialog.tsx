@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import {
   Dialog,
   DialogContent,
@@ -8,9 +7,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Github, HelpCircle, Youtube } from "lucide-react";
-import Link from "next/link";
+import { Github, HelpCircle } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 type Props = {};
 
@@ -25,7 +24,7 @@ const DetailsDialog = (props: Props) => {
       </DialogTrigger>
       <DialogContent className="w-[70vw] max-w-[100vw] md:w-[50vw]">
         <DialogHeader>
-          <DialogTitle className="text-2xl">Welcome to Quizmify!</DialogTitle>
+          <DialogTitle className="text-2xl">Welcome to Qizzle!</DialogTitle>
           <DialogDescription>
             <div className="flex items-center gap-3 my-2">
               <p className="flex items-center">
