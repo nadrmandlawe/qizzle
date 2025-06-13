@@ -69,10 +69,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn(inter.className, "antialiased min-h-screen ")}>
+      <body className={cn(inter.className, "antialiased  ")}>
         <Providers>
           <Navbar />
-          <main className="flex-grow overflow-auto">
+          <main className="flex-grow overflow-auto h-full flex flex-col min-h-[calc(100vh-3rem)]">
             <Suspense>{children}</Suspense>
           </main>
           <Footer />

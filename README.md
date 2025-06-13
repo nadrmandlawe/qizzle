@@ -118,10 +118,6 @@ Qizzle is an intelligent quiz generation platform that leverages the power of AI
    npm run dev
    ```
 
-## 📱 Screenshots
-
-[Add your application screenshots here]
-
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.

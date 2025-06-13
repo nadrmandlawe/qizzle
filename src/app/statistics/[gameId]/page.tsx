@@ -99,7 +99,7 @@ const Statistics = ({ params }: Props) => {
 
   if (status === "loading" || isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-[calc(100vh-3rem)]">
         <Loader2 className="w-8 h-8 animate-spin" />
       </div>
     );
