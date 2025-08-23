@@ -113,12 +113,11 @@ const OpenEnded = ({ game }: Props) => {
           {formatTimeDelta(differenceInSeconds(now, game.timeStarted))}
         </div>
         <Link
-          href={`/statistics/${game.id}`}
-          className={cn(buttonVariants({ size: "lg" }), "mt-2")}
-        >
-          View Statistics
-          <BarChart className="w-4 h-4 ml-2" />
-        </Link>
+  href={`/statistics/${game.id}`}
+  className={cn(buttonVariants({ size: "lg" }), "mt-2")}>
+  View Statistics
+  <BarChart className="w-4 h-4 ml-2" />
+</Link>
       </div>
     );
   }

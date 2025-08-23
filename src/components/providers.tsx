@@ -8,15 +8,20 @@ import {
   QueryClientProvider,
   useQuery,
 } from "@tanstack/react-query";
+import { Toaster } from "@/components/ui/toaster";
+
 const queryClient = new QueryClient();
 
 const Providers = ({ children }: ThemeProviderProps) => {
   return (
     <QueryClientProvider client={queryClient}>
-      <NextThemesProvider attribute="class" defaultTheme="system" enableSystem>
-        <SessionProvider>{children}</SessionProvider>
-      </NextThemesProvider>
-    </QueryClientProvider>
+    <NextThemesProvider attribute="class" defaultTheme="system" enableSystem>
+      <SessionProvider>
+        {children}
+        <Toaster />
+      </SessionProvider>
+    </NextThemesProvider>
+  </QueryClientProvider>
   );
 };
 

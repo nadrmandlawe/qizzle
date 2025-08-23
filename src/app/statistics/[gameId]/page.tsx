@@ -134,8 +134,8 @@ const Statistics = ({ params }: Props) => {
         <div className="flex items-center justify-between space-y-2">
           <h2 className="text-3xl font-bold tracking-tight">Summary</h2>
           <div className="flex items-center space-x-4">
-            <Link href="/dashboard" className={buttonVariants()}>
-              <LucideLayoutDashboard className="mr-2" />
+          <Link href="/dashboard" className={buttonVariants()}>
+          <LucideLayoutDashboard className="mr-2" />
               Back to Dashboard
             </Link>
           </div>

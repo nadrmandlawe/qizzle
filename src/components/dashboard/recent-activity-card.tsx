@@ -31,17 +31,17 @@ const RecentActivityCard = async (props: Props) => {
     //   </CardContent>
     // </Card>
     <ScrollArea className="rounded-md border h-[700px]">
-           <div className="sticky top-0 bg-background p-4 w-full rounded-md">
-      <h1 className="text-2xl font-bold">Recent Activity</h1>
-      <p className="text-sm text-muted-foreground">
-      You have played a total of {games_count} quizzes.
-        </p>
+      <div className="sticky top-0 bg-background p-4 w-full rounded-md">
+ <h1 className="text-2xl font-bold">Recent Activity</h1>
+ <p className="text-sm text-muted-foreground">
+ You have played a total of {games_count} quizzes.
+   </p>
+ </div>
+      <div className="p-4 ">
+   
+        <HistoryComponent limit={10} userId={session.user.id} />
       </div>
-    <div className="p-4 ">
- 
-      <HistoryComponent limit={10} userId={session.user.id} />
-    </div>
-  </ScrollArea>
+    </ScrollArea>
   );
 };
 

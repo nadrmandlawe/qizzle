@@ -41,23 +41,21 @@ const History = async (props: Props) => {
 
   return (
     <main className="p-8 mx-auto max-w-7xl mt-14 flex flex-col h-full">
-   <div className="flex items-start md:items-center justify-between mb-8 flex-col md:flex-row gap-4">
-   <div className="flex items-start flex-col gap-4">
-        <h2 className="text-3xl font-bold tracking-tight">
-          {selectedTopic === "all" ? "History" : `History for ${selectedTopic}`}
-        </h2>
-          <TopicFilterWrapper 
-            topics={topics}
-            selectedTopic={selectedTopic}
-          />
+      <div className="flex items-start md:items-center justify-between mb-8 flex-col md:flex-row gap-4">
+      <div className="flex items-start flex-col gap-4">
+           <h2 className="text-3xl font-bold tracking-tight">
+             {selectedTopic === "all" ? "History" : `History for ${selectedTopic}`}
+           </h2>
+             <TopicFilterWrapper 
+               topics={topics}
+               selectedTopic={selectedTopic}
+             />
+         </div>
+         <Link className={buttonVariants()} href="/dashboard" legacyBehavior>
+               <LucideLayoutDashboard className="mr-2" />
+               Back to Dashboard
+             </Link>
       </div>
-      <Link className={buttonVariants()} href="/dashboard">
-            <LucideLayoutDashboard className="mr-2" />
-            Back to Dashboard
-          </Link>
-   </div>
-
-
       <div className="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4">
         <HistoryComponent 
           limit={100} 

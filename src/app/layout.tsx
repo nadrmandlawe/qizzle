@@ -1,7 +1,6 @@
 import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
 import Providers from "@/components/providers";
-import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
@@ -76,7 +75,6 @@ export default function RootLayout({
             <Suspense>{children}</Suspense>
           </main>
           <Footer />
-          <Toaster />
         </Providers>
       </body>
     </html>

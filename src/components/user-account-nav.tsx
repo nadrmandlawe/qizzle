@@ -37,7 +37,7 @@ const UserAccountNav = () => {
 
 
   if(pathname === "/"){
-    return(
+    return (
       // <Button       onClick={() => {
       //   signIn("google");
       // }}>
@@ -45,7 +45,7 @@ const UserAccountNav = () => {
       //   Sign In
       // </Button>
       <StartLearningButton label="Sign In" icon={<IconBrandGoogleFilled className="size-4 mr-2" />} />
-    )
+    );
   }
 
   if(status === "loading"){

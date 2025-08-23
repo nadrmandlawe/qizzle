@@ -54,12 +54,11 @@ const HistoryComponent = async ({ limit, userId, topic }: Props) => {
           <Card key={game.id} className="break-inside-avoid mb-4">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-lg font-bold">
-                <Link 
-                  href={`/statistics/${game.id}`}
-                  className="text-blue-500 hover:underline"
-                >
-                  {game.topic}
-                </Link>
+              <Link
+  href={`/statistics/${game.id}`}
+  className="text-blue-500 hover:underline">
+  {game.topic}
+</Link>
               </CardTitle>
               <div className="flex items-center gap-2">
                 {game.gameType === "mcq" ? (
