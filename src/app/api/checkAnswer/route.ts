@@ -153,6 +153,16 @@ export async function POST(req: Request) {
       return NextResponse.json({
         percentageSimilar,
       });
+    } else {
+      // Add this return statement for other question types
+      return NextResponse.json(
+        {
+          message: "Unsupported question type",
+        },
+        {
+          status: 400,
+        }
+      );
     }
   } catch (error) {
     if (error instanceof ZodError) {
