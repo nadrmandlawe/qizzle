@@ -1,203 +1,211 @@
-import { prisma } from "@/lib/db";
-import { getAuthSession } from "@/lib/nextauth";
-import { quizCreationSchema } from "@/schemas/forms/quiz";
-import axios from "axios";
-import { NextResponse } from "next/server";
+import { GET, POST } from "../src/app/api/game/route";
 import { z } from "zod";
 
-export async function POST(req: Request) {
-  try {
-    // Verify database connection
-    try {
-      await prisma.$connect();
-      console.log("Database connection successful");
-    } catch (error) {
-      console.error("Database connection error:", error);
-      return NextResponse.json(
-        { error: "Failed to connect to database" },
-        { status: 500 }
-      );
-    }
-
-    const session = await getAuthSession();
-    if (!session?.user) {
-      return NextResponse.json(
-        { error: "You must be logged in to create a game." },
-        {
-          status: 401,
-        }
-      );
-    }
-
-    const body = await req.json();
-    const { topic, type, amount, level } = quizCreationSchema.parse(body);
-
-    // Validate level
-    const validLevels = ["beginner", "intermediate", "expert"];
-    if (!validLevels.includes(level)) {
-      return NextResponse.json(
-        { error: `Invalid level: ${level}` },
-        { status: 400 }
-      );
-    }
-
-    console.log("Creating game with data:", {
-      gameType: type,
-      userId: session.user.id,
-      topic,
-      level,
-    });
-
-    const game = await prisma.game.create({
-      data: {
-        gameType: type,
-        timeStarted: new Date(),
-        userId: session.user.id,
-        topic,
-        level,
+// Mocks for dependencies used in route.ts
+vi.mock("@/lib/db", () => {
+  return {
+    prisma: {
+      $connect: vi.fn().mockResolvedValue(undefined),
+      $disconnect: vi.fn().mockResolvedValue(undefined),
+      game: {
+        findUnique: vi.fn(),
+        create: vi.fn(),
       },
-    });
-
-    console.log("Game created:", game);
-
-    await prisma.topic_count.upsert({
-      where: {
-        topic,
+      topic_count: {
+        upsert: vi.fn(),
       },
-      create: {
-        topic,
-        count: 1,
+      question: {
+        createMany: vi.fn(),
       },
-      update: {
-        count: {
-          increment: 1,
-        },
-      },
-    });
+    },
+  } as const;
+});
 
-    const { data } = await axios.post(
-      `${process.env.NEXTAUTH_URL as string}/api/questions`,
-      {
-        amount,
-        topic,
-        type,
-        level,
-      }
-    );
+vi.mock("@/lib/nextauth", () => ({
+  getAuthSession: vi.fn(),
+}));
 
-    if (type === "mcq") {
-      type mcqQuestion = {
-        question: string;
-        answer: string;
-        option1: string;
-        option2: string;
-        option3: string;
-      };
+vi.mock("axios", () => ({
+  default: { post: vi.fn() },
+}));
 
-      const manyData = data.questions.map((question: mcqQuestion) => {
-        const options = [
-          question.option1,
-          question.option2,
-          question.option3,
-          question.answer,
-        ].sort(() => Math.random() - 0.5);
-        return {
-          question: question.question,
-          answer: question.answer,
-          options: JSON.stringify(options),
-          gameId: game.id,
-          questionType: "mcq",
-        };
+// Mock quiz creation schema with a real zod-based parse to allow validation tests
+vi.mock("@/schemas/forms/quiz", () => ({
+  quizCreationSchema: {
+    parse: (body: any) => {
+      const schema = z.object({
+        topic: z.string(),
+        type: z.string(),
+        amount: z.number(),
+        level: z.string(),
       });
+      return schema.parse(body);
+    },
+  },
+}));
 
-      await prisma.question.createMany({
-        data: manyData,
-      });
-    } else if (type === "open_ended") {
-      type openQuestion = {
-        question: string;
-        answer: string;
-      };
-      await prisma.question.createMany({
-        data: data.questions.map((question: openQuestion) => {
-          return {
-            question: question.question,
-            answer: question.answer,
-            gameId: game.id,
-            questionType: "open_ended",
-          };
-        }),
-      });
-    }
+import { prisma } from "@/lib/db";
+import { getAuthSession } from "@/lib/nextauth";
+import axios from "axios";
 
-    return NextResponse.json({ gameId: game.id }, { status: 200 });
-  } catch (error) {
-    console.error("Error in game creation:", error);
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: error.issues },
-        {
-          status: 400,
-        }
-      );
-    } else {
-      return NextResponse.json(
-        { error: error instanceof Error ? error.message : "An unexpected error occurred" },
-        {
-          status: 500,
-        }
-      );
-    }
-  } finally {
-    await prisma.$disconnect();
-  }
-}
+describe("Game route API tests (GET/POST /api/game)", () => {
+  beforeEach(() => {
+    // Clear mocks before each test
+    vi.clearAllMocks();
+  });
 
-export async function GET(req: Request) {
-  try {
-    const session = await getAuthSession();
-    if (!session?.user) {
-      return NextResponse.json(
-        { error: "You must be logged in to view games." },
-        { status: 401 }
-      );
-    }
+  it("GET: unauthenticated should return 401", async () => {
+    (getAuthSession as vi.Mock).mockResolvedValue(null);
 
-    const url = new URL(req.url);
-    const gameId = url.searchParams.get("gameId");
-    if (!gameId) {
-      return NextResponse.json(
-        { error: "You must provide a game id." },
-        { status: 400 }
-      );
-    }
-
-    const game = await prisma.game.findUnique({
-      where: {
-        id: gameId,
-        userId: session.user.id,
-      },
-      include: {
-        questions: true,
-      },
+    const req = new Request("http://localhost/api/game?gameId=game_123", {
+      method: "GET",
     });
 
-    if (!game) {
-      return NextResponse.json(
-        { error: "Game not found or unauthorized." },
-        { status: 404 }
-      );
-    }
+    const res = await GET(req);
+    expect(res.status).toBe(401);
 
-    return NextResponse.json(
-      { game },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error("Error in GET game:", error);
-    return NextResponse.json(
-      { error: "An unexpected error occurred" },
-      { status: 500 }
-    );
-  }
-}
+    const json = await res.json();
+    expect(json).toHaveProperty("error");
+  });
+
+  it("GET: authenticated and existing game returns 200 with game payload", async () => {
+    (getAuthSession as vi.Mock).mockResolvedValue({ user: { id: "user_1" } });
+    (prisma.game.findUnique as vi.Mock).mockResolvedValue({
+      id: "game_123",
+      name: "Test Game",
+      maxPlayers: 4,
+      userId: "user_1",
+      questions: [],
+    });
+
+    const req = new Request("http://localhost/api/game?gameId=game_123", {
+      method: "GET",
+    });
+
+    const res = await GET(req);
+    expect(res.status).toBe(200);
+
+    const body = await res.json();
+    expect(body).toHaveProperty("game");
+    expect(body.game).toMatchObject({ id: "game_123", name: "Test Game" });
+    expect(body.game).toHaveProperty("questions");
+  });
+
+  it("GET: missing gameId parameter returns 400", async () => {
+    (getAuthSession as vi.Mock).mockResolvedValue({ user: { id: "user_1" } });
+
+    const req = new Request("http://localhost/api/game", { method: "GET" });
+    const res = await GET(req);
+
+    expect(res.status).toBe(400);
+    const json = await res.json();
+    expect(json).toHaveProperty("error");
+  });
+
+  it("POST: valid payload creates a game and returns 200 with gameId", async () => {
+    (getAuthSession as vi.Mock).mockResolvedValue({ user: { id: "user_1" } });
+
+    // Mock DB and external calls for a successful creation path
+    (prisma.$connect as vi.Mock).mockResolvedValue(undefined);
+    (prisma.game.create as vi.Mock).mockResolvedValue({ id: "game_0001" });
+    (prisma.topic_count.upsert as vi.Mock).mockResolvedValue(undefined);
+    (axios.post as vi.Mock).mockResolvedValue({ data: { questions: [] } });
+
+    const payload = {
+      topic: "math",
+      type: "mcq",
+      amount: 5,
+      level: "beginner",
+    };
+
+    const req = new Request("http://localhost/api/game", {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const res = await POST(req);
+    // Note: In route.ts, POST returns 200 with { gameId }
+    expect(res.status).toBe(200);
+
+    const json = await res.json();
+    expect(json).toHaveProperty("gameId", "game_0001");
+  });
+
+  it("POST: missing required field triggers 400 validation error", async () => {
+    (getAuthSession as vi.Mock).mockResolvedValue({ user: { id: "user_1" } });
+
+    const payload = {
+      // Missing required fields: topic, type, amount, level
+    };
+
+    const req = new Request("http://localhost/api/game", {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const res = await POST(req);
+    expect(res.status).toBe(400);
+
+    const json = await res.json();
+    expect(json).toHaveProperty("error");
+    // error should be an array of issues from Zod
+    expect(Array.isArray(json.error)).toBe(true);
+  });
+
+  it("POST: unauthenticated should return 401", async () => {
+    (getAuthSession as vi.Mock).mockResolvedValue(null);
+
+    const payload = {
+      topic: "math",
+      type: "mcq",
+      amount: 5,
+      level: "beginner",
+    };
+
+    const req = new Request("http://localhost/api/game", {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const res = await POST(req);
+    expect(res.status).toBe(401);
+  });
+
+  it("POST: DB error should return 500", async () => {
+    (getAuthSession as vi.Mock).mockResolvedValue({ user: { id: "user_1" } });
+    (prisma.$connect as vi.Mock).mockResolvedValue(undefined);
+    (prisma.game.create as vi.Mock).mockRejectedValue(new Error("DB failure"));
+
+    const payload = {
+      topic: "math",
+      type: "mcq",
+      amount: 5,
+      level: "beginner",
+    };
+
+    const req = new Request("http://localhost/api/game", {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const res = await POST(req);
+    expect(res.status).toBe(500);
+  });
+
+  it("POST: non-JSON payload should return 500 (invalid JSON)", async () => {
+    (getAuthSession as vi.Mock).mockResolvedValue({ user: { id: "user_1" } });
+
+    const req = new Request("http://localhost/api/game", {
+      method: "POST",
+      body: "not-json",
+      headers: { "Content-Type": "text/plain" },
+    });
+
+    const res = await POST(req);
+    expect(res.status).toBe(500);
+  });
+});
